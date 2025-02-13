@@ -15,6 +15,10 @@ export const SidebarStructure = [
             {
                 title: "Toàn bộ chi tiết",
                 url: "#",
+            },
+            {
+                title:"Đơn hàng mới",
+                url:"/new-order"
             }
         ],
     },
@@ -31,7 +35,7 @@ export const SidebarStructure = [
     },
     {
         title: "Kho hàng",
-        url: "#",
+        url: "/stock",
         icon: Layers,
         items: [
             {
