@@ -6,16 +6,31 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { STOCK } from "@/components/stock/stock-constants";
+import { Stock } from "@/components/stock/stock-model";
+import { STOCK_DETAILS } from "@/components/stockDetail/stockDetail-constants";
+import { DataTable } from "@/components/table/data-table";
+import { getStockDetailColumns } from "@/components/stockDetail/stockDetail-conlumn";
 
 export default function StockBody() {
-    const [data, setData] = useState<StockDetail[]>([]);
+    const [data, setData] = useState<StockDetail[]>(STOCK_DETAILS);
+    const [stock,setStock] = useState<Stock>(STOCK);
     const [search, setSearch] = useState('');
     const handleSearchClick = () => {
-        setData(data.filter(item => item.ingredient.name.includes(search)));
+        if(search)
+            setData(data.filter(item => item.ingredient.name.includes(search)));
+        else
+            setData(STOCK_DETAILS);
+    }
+    const onDelete = (idRow:string)=>{
 
     }
+    var columns = getStockDetailColumns();
     return <div className="p-4 space-y-5">
-        <div className="h-10 flex space-x-4">
+        <div className="h-10 flex space-x-4 items-center">
+            <div className="text-md font-bold">
+                Ngày: <span className="font-normal text-gray-500">{(new Date()).toDateString()}</span>
+            </div>
             <div className="w-30 relative">
                 <Input
                     placeholder="Từ khóa..."
@@ -37,6 +52,6 @@ export default function StockBody() {
             </Button>
             
         </div>
-
+        <DataTable columns={columns} data={data} onDelete={onDelete} newButton={undefined}/>
     </div>
 }
