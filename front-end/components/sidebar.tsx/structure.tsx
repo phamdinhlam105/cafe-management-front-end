@@ -40,7 +40,7 @@ export const SidebarStructure = [
         items: [
             {
                 title: "Nhập kho",
-                url: "#",
+                url: "/stock/import",
             },
             {
                 title: "Tồn kho",

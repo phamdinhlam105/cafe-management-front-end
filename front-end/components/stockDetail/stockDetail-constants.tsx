@@ -4,6 +4,7 @@ import { StockDetail } from "./stockDetail-model";
 export const STOCK_DETAILS:StockDetail[] = [
     {
         id: "1",
+        idStock:"1",
         startOfDay: 10,
         import: 0,
         remain: 10,
@@ -11,6 +12,7 @@ export const STOCK_DETAILS:StockDetail[] = [
     },
     {
         id: "2",
+        idStock:"1",
         startOfDay: 10,
         import: 0,
         remain: 10,
@@ -18,6 +20,7 @@ export const STOCK_DETAILS:StockDetail[] = [
     },
     {
         id: "3",
+        idStock:"1",
         startOfDay: 10,
         import: 0,
         remain: 10,
@@ -25,6 +28,7 @@ export const STOCK_DETAILS:StockDetail[] = [
     },
     {
         id: "4",
+        idStock:"1",
         startOfDay: 10,
         import: 0,
         remain: 10,
@@ -32,6 +36,7 @@ export const STOCK_DETAILS:StockDetail[] = [
     },
     {
         id: "5",
+        idStock:"1",
         startOfDay: 10,
         import: 0,
         remain: 10,
