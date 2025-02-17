@@ -1,5 +1,10 @@
 "use client"
 import { DateTimePicker24h } from "@/components/datetime-picker";
+import { INGREDIENTS } from "@/components/ingredient/ingredient-constants";
+import { getStockEntryColumn } from "@/components/stockEntry/stockEntry-column";
+import { StockEntryDetail } from "@/components/stockEntryDetail/stockEntryDetail-model";
+import { DataTable } from "@/components/table/data-table";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
@@ -8,6 +13,18 @@ export default function ImportStockBody() {
 
     const [userName, setUserName] = useState('');
     const [date,setDate] = useState<Date>(new Date());
+    const [data,setData] = useState<StockEntryDetail[]>(() => 
+        INGREDIENTS.map(ingredient => ({
+            id: crypto.randomUUID(), 
+            stockEntryId: "", 
+            ingredient,
+            quantity: 0,
+            price: "",
+            total: "0"
+        })));
+
+    var columns = getStockEntryColumn(setData);
+
     return <div className="p-5 space-y-5">
         <div className="flex items-center">
             <Label className="text-md w-1/4">Người nhập kho</Label>
@@ -23,5 +40,10 @@ export default function ImportStockBody() {
         <Label className="text-md w-1/4">Thời điểm nhập kho: </Label>
             <DateTimePicker24h date={date} setDate={setDate}/>
         </div>
+
+        <DataTable columns={columns} data={data} onDelete={function (idRow: string): void {
+            throw new Error("Function not implemented.");
+        } }/>
+        <Button> Tạo đơn nhập kho</Button>
     </div>
 }

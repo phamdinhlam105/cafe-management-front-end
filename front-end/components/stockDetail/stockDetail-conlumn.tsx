@@ -4,7 +4,6 @@ import SelectCell from "@/components/table/select-cell";
 import SelectHeader from "@/components/table/select-header";
 import { ColumnDef } from "@tanstack/react-table";
 import { StockDetail } from "./stockDetail-model";
-import { Ingredient } from "../ingredient/ingredient-model";
 
 export const getStockDetailColumns = (): ColumnDef<StockDetail>[] => [
     {
