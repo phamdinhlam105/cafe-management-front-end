@@ -13,25 +13,28 @@ export const ORDER: Order[] = [
         createAt:"24/11/2024 08:00:00",
         details:[
             {
-                id:"1",
-                productName:"Cafe",
-                quantity:"1",
-                total:"20000",
-                note:""
+                id: "1",
+                productName: "Cafe",
+                quantity: "1",
+                total: "20000",
+                note: "",
+                order: undefined
             },
             {
                 id:"2",
                 productName:"Sting",
                 quantity:"1",
                 total:"22000",
-                note:""
+                note:"",
+                order: undefined
             },
             {
                 id:"3",
                 productName:"Trà đào",
                 quantity:"1",
                 total:"30000",
-                note:""
+                note:"",
+                order: undefined
             }
         ]
     },
@@ -50,21 +53,24 @@ export const ORDER: Order[] = [
                 productName:"Cafe",
                 quantity:"1",
                 total:"20000",
-                note:""
+                note:"",
+                order: undefined
             },
             {
                 id:"2",
                 productName:"Sting",
                 quantity:"1",
                 total:"22000",
-                note:""
+                note:"",
+                order: undefined
             },
             {
                 id:"3",
                 productName:"Trà đào",
                 quantity:"1",
                 total:"30000",
-                note:""
+                note:"",
+                order: undefined
             }
         ]
     },
@@ -83,7 +89,8 @@ export const ORDER: Order[] = [
                 productName: "Trà đào",
                 quantity: "1",
                 total: "30000",
-                note: ""
+                note: "",
+                order: undefined
             }
         ]
     }

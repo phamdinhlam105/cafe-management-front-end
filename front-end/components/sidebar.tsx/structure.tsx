@@ -50,7 +50,7 @@ export const SidebarStructure = [
     },
     {
         title: "Khuyến mãi",
-        url: "#",
+        url: "/promotion",
         icon: Gift,
         items: [
             {
@@ -65,7 +65,7 @@ export const SidebarStructure = [
     },
     {
         title: "Báo cáo",
-        url: "#",
+        url: "/report",
         icon: Newspaper,
         items: [
             {
