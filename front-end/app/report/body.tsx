@@ -1,97 +1,63 @@
 "use client"
-import { BaseReport } from "@/components/report/base-report-model";
+import { DatePicker } from "@/components/date-picker";
+import BestDay from "@/components/report/best-day";
 import { DAILY_REPORTS } from "@/components/report/daily-report-constants";
 import { DailyReport } from "@/components/report/daily-report-model";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { useState } from "react";
-import { Bar, BarChart, CartesianGrid, LabelProps, XAxis } from "recharts";
+import ReportChart from "@/components/report/report-chart";
+import { Button } from "@/components/ui/button";
+import { Label } from "@radix-ui/react-label";
+import { useEffect, useState } from "react";
 
 export default function ReportBody() {
-    const [data, setData] = useState<BaseReport[]>(DAILY_REPORTS.map(dr => dr.baseReport));
-    const chartConfig = {
-        totalRevenue: {
-            label: "Doanh thu",
-            color: "#2563eb",
-        },
-        totalExpenditure: {
-            label: "Chi tiêu",
-            color: "#60a5fa",
-        },
-        numberOfFinishedOrders: {
-            label: "Tổng đơn hoàn thành",
-            color: "#17fc03"
-        },
-        numberOfCancelledOrders: {
-            label: "Tổng đơn hủy",
-            color: "#ff0000"
-        }
-    }
-
-    const renderCustomLabel = ({
-        x = 0,
-        y = 0,
-        width = 50,
-        height = 50,
-    }, label: string) => {
-        const offset = 10; 
-        return (
-            <text
-                x={x + width / 2}
-                y={y + height + offset}
-                textAnchor="middle"
-                fill="#333"
-                fontSize={12}
-                
-            >
-                {label}
-            </text>
-        );
+    const [data, setData] = useState<DailyReport[]>(DAILY_REPORTS);
+    const [reportData, setReportData] = useState<DailyReport[]>(data);
+    const [startDate, setStartDate] = useState<Date>(new Date);
+    const [endDate, setEndDate] = useState<Date>(new Date);
+    const [bestDay, setBestDay] = useState<DailyReport | null>();
+    const parseDate = (dateStr: string): Date => {
+        const [day, month, year] = dateStr.split("/").map(Number);
+        return new Date(year, month - 1, day);
     };
 
+    const normalizeDate = (date: Date): Date => {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      };
+
+    const calculateProfit = (report: DailyReport): number => {
+        const revenue = Number(report.totalRevenue);
+        const expenditure = Number(report.totalExpenditure);
+        return revenue - expenditure;
+    };
+
+    const handleChooseDate = () => {
+        const normalizedStart = normalizeDate(startDate);
+        const normalizedEnd = normalizeDate(endDate);
+
+        const filtered = data.filter(report => {
+            const reportDate = parseDate(report.reportDate);
+            return reportDate >= normalizedStart && reportDate <= normalizedEnd;
+        });
+        setReportData(filtered);
+        if (filtered.length > 0) {
+            const best = filtered.reduce((prev, curr) => {
+                return calculateProfit(curr) > calculateProfit(prev) ? curr : prev;
+            });
+            setBestDay(best);
+        } else {
+            setBestDay(null);
+        }
+    };
     return <div className="p-4 space-y-5">
-        <div className="flex">
-            <div>
-                <h2 className="text-xl font-bold mb-4">Doanh thu</h2>
-                <ChartContainer config={chartConfig} className="min-h-[300px] pb-10" >
-                    <BarChart accessibilityLayer data={data}>
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <CartesianGrid vertical={false} />
-
-                        <Bar
-                            dataKey="totalRevenue"
-                            fill="var(--color-totalRevenue)"
-                            radius={4}
-                            label={(props)=>renderCustomLabel(props,"Tổng doanh thu")} />
-                        <Bar
-                            dataKey="totalExpenditure"
-                            fill="var(--color-totalExpenditure)"
-                            radius={4}
-                            label={(props)=>renderCustomLabel(props,"Tổng chi tiêu")} />
-                    </BarChart>
-                </ChartContainer>
-            </div>
-            <div>
-                <h2 className="text-xl font-bold mb-4">Số lượng sản phẩm</h2>
-                <ChartContainer config={chartConfig} className="min-h-[300px]" >
-                    <BarChart accessibilityLayer data={data}>
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <CartesianGrid vertical={false} />
-
-                        <XAxis
-                            dataKey="month"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                        <Bar dataKey="numberOfFinishedOrders" fill="var(--color-numberOfFinishedOrders)" radius={4} />
-                        <Bar dataKey="numberOfCancelledOrders" fill="var(--color-numberOfCancelledOrders)" radius={4} />
-
-                    </BarChart>
-                </ChartContainer>
-            </div>
+        <div className="flex space-x-2 items-center">
+            <Label>Từ ngày</Label>
+            <DatePicker date={startDate} setDate={setStartDate} />
+            <Label>Đến ngày</Label>
+            <DatePicker date={endDate} setDate={setEndDate} />
+            <Button onClick={handleChooseDate} variant="outline">Xem báo cáo</Button>
         </div>
-
-
+        <div className="flex space-x-5">
+            <ReportChart data={reportData} />
+            <BestDay bestDay={bestDay}/>
+        </div>
     </div>
 }
