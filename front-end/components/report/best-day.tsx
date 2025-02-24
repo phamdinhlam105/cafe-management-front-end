@@ -1,4 +1,4 @@
-import { DailyReport } from "./daily-report-model";
+import { DailyReport } from "./daily/daily-report-model";
 
 export default function BestDay({ bestDay }: { bestDay: DailyReport | null | undefined }) {
 

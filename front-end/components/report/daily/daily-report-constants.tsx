@@ -1,5 +1,6 @@
-import { PRODUCTS } from "../product/constants";
+import { PRODUCTS } from "@/components/product/constants";
 import { DailyReport } from "./daily-report-model";
+
 
 export const DAILY_REPORTS: DailyReport[] = [
     {

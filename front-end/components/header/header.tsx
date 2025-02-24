@@ -38,12 +38,12 @@ export default function Header({ title }: { title: string }) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             onClick={() => router.push('/profile')}
-                            className="flex p-2 hover:bg-accent hover:outline-none rounded-md">
+                            className="flex p-2 hover:bg-accent hover:outline-none rounded-md hover:cursor-pointer">
                             <User />
                             Thông tin cá nhân
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="flex p-2 hover:bg-accent hover:outline-none rounded-md">
+                        <DropdownMenuItem className="flex p-2 hover:bg-accent hover:outline-none hover:cursor-pointer rounded-md">
                             <LogOut />
                             Đăng xuất
                         </DropdownMenuItem>

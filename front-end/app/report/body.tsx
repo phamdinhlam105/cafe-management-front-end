@@ -1,10 +1,12 @@
 "use client"
 import { DatePicker } from "@/components/date-picker";
 import BestDay from "@/components/report/best-day";
-import { DAILY_REPORTS } from "@/components/report/daily-report-constants";
-import { DailyReport } from "@/components/report/daily-report-model";
+import { DAILY_REPORTS } from "@/components/report/daily/daily-report-constants";
+import { DailyReport } from "@/components/report/daily/daily-report-model";
 import ReportChart from "@/components/report/report-chart";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Label } from "@radix-ui/react-label";
 import { useEffect, useState } from "react";
 
@@ -14,6 +16,8 @@ export default function ReportBody() {
     const [startDate, setStartDate] = useState<Date>(new Date);
     const [endDate, setEndDate] = useState<Date>(new Date);
     const [bestDay, setBestDay] = useState<DailyReport | null>();
+    const [reportType, setReportType] = useState("Báo cáo ngày");
+
     const parseDate = (dateStr: string): Date => {
         const [day, month, year] = dateStr.split("/").map(Number);
         return new Date(year, month - 1, day);
@@ -48,6 +52,24 @@ export default function ReportBody() {
         }
     };
     return <div className="p-4 space-y-5">
+        <Label className="mr-4">Loại báo cáo</Label>
+        <DropdownMenu>
+                <DropdownMenuTrigger className="border rounded-sm p-2 w-48">{reportType}</DropdownMenuTrigger>
+                <DropdownMenuContent className="border rounded-sm shadow-md bg-neutral-50 w-48">
+                   <DropdownMenuItem>
+                        <Button variant="ghost" onClick={() => setReportType("Báo cáo ngày")}>Báo cáo ngày</Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <Button variant="ghost" onClick={() => setReportType("Báo cáo tháng")}>Báo cáo tháng</Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <Button variant="ghost" onClick={() => setReportType("Báo cáo quý")}>Báo cáo quý</Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <Button variant="ghost" onClick={() => setReportType("Báo cáo năm")}>Báo cáo năm</Button>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         <div className="flex space-x-2 items-center">
             <Label>Từ ngày</Label>
             <DatePicker date={startDate} setDate={setStartDate} />
