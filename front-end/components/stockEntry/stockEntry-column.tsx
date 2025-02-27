@@ -24,7 +24,7 @@ export const getStockEntryColumn = (
 
         {
             accessorKey: "measurementUnit",
-            header: ({ column }) => <ColumnHeader column={column} title="Đơn vị tính" />,
+            header: ({ column }) => <ColumnHeader column={column} title="Đơn vị" />,
             cell: ({ row }) => <div className="text-md text-gray-400">{row.original.ingredient.measurement}</div>
         },
 
@@ -53,7 +53,7 @@ export const getStockEntryColumn = (
 
         {
             accessorKey: "import",
-            header: ({ column }) => <ColumnHeader column={column} title="Số lượng nhập kho" />,
+            header: ({ column }) => <ColumnHeader column={column} title="Số lượng nhập" />,
             cell: ({ row }) => {
                 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                     const value = e.target.value;
@@ -75,7 +75,7 @@ export const getStockEntryColumn = (
         },
         {
             accessorKey: "remain",
-            header: ({ column }) => <ColumnHeader column={column} title="Số lượng tồn kho" />,
+            header: ({ column }) => <ColumnHeader column={column} title="Tồn kho" />,
             cell: ({ row }) => {
                 const stockDetail = STOCK_DETAILS.find(
                     (detail) => detail.ingredient.id === row.original.ingredient.id

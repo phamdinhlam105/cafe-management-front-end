@@ -40,14 +40,12 @@ export const getOrderDetailColumns = ({ onDelete }: { onDelete: (idRow: string) 
         header: () => <div className="text-sm">Hành động</div>,
         cell: ({ row }) => {
             return <div className="flex justify-center w-23 space-x-2">
-                {row.original.order?.orderStatus !== OrderStatus.Completed &&
                     <Button
                         onClick={() => onDelete(row.original.id)}
                         className="py-1 px-2 items-center hover:bg-gray-300 hover:text-neutral-900 rounded-sm"
                     >
                         Xóa
                     </Button>
-                }
             </div>
         }
     }

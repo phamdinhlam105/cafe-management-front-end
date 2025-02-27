@@ -4,7 +4,7 @@ import NewCategoryBody from "./body";
 export default function NewCategoryPage() {
 
     return <>
-        <Header title="Sản phẩm mới" />
+        <Header title="Danh mục mới" />
         <NewCategoryBody />
     </>
 }

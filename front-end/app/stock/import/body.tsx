@@ -12,11 +12,11 @@ import { useState } from "react";
 export default function ImportStockBody() {
 
     const [userName, setUserName] = useState('');
-    const [date,setDate] = useState<Date>(new Date());
-    const [data,setData] = useState<StockEntryDetail[]>(() => 
+    const [date, setDate] = useState<Date>(new Date());
+    const [data, setData] = useState<StockEntryDetail[]>(() =>
         INGREDIENTS.map(ingredient => ({
-            id: crypto.randomUUID(), 
-            stockEntryId: "", 
+            id: crypto.randomUUID(),
+            stockEntryId: "",
             ingredient,
             quantity: 0,
             price: "",
@@ -37,13 +37,17 @@ export default function ImportStockBody() {
             />
         </div>
         <div className="flex items-center">
-        <Label className="text-md w-1/4">Thời điểm nhập kho: </Label>
-            <DateTimePicker24h date={date} setDate={setDate}/>
+            <Label className="text-md w-1/4">Thời điểm nhập kho: </Label>
+            <div className="w-1/4">
+            <DateTimePicker24h date={date} setDate={setDate} />
+            </div>
+           
+          
         </div>
-
+        <Button variant="outline"> Tạo đơn nhập kho</Button>
         <DataTable columns={columns} data={data} onDelete={function (idRow: string): void {
             throw new Error("Function not implemented.");
-        } }/>
-        <Button> Tạo đơn nhập kho</Button>
+        }} />
+
     </div>
 }

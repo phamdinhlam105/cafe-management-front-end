@@ -29,7 +29,7 @@ export default function NewCategoryBody() {
 
         const newProductData = { name, price, idCategory };
         setNewProduct(newProductData);
-        setSuccess("Sản phẩm đã được thêm thành công!");
+        setSuccess("Danh mục đã được thêm thành công!");
 
         setName("");
         setPrice("");
@@ -38,7 +38,6 @@ export default function NewCategoryBody() {
 
     return (
         <div className="p-4">
-            <h2 className="text-lg font-semibold">Thêm Sản Phẩm Mới</h2>
 
             {error && <p className="text-red-500">{error}</p>}
             {success && <p className="text-green-500">{success}</p>}
@@ -46,16 +45,16 @@ export default function NewCategoryBody() {
             {newProduct && (
                 <div className="mt-4 p-4 border border-gray-300 rounded-md">
                     <h3 className="font-semibold">Sản phẩm vừa thêm:</h3>
-                    <p><strong>Tên sản phẩm:</strong> {newProduct.name}</p>
-                    <p><strong>Giá:</strong> {newProduct.price}</p>
-                    <p><strong>Danh mục:</strong> {CATEGORIES.find(category => category.id === newProduct.idCategory)?.name}</p>
+                    <p><strong>Tên danh mục:</strong> {newProduct.name}</p>
+                    <p><strong>Mô tả:</strong> {newProduct.price}</p>
+
                 </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                 <div className="">
                     <Label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                        Tên sản phẩm
+                        Tên danh mục
                     </Label>
                     <Input
                         id="name"
@@ -68,7 +67,7 @@ export default function NewCategoryBody() {
 
                 <div>
                     <Label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                        Giá sản phẩm
+                        Mô tả
                     </Label>
                     <Input
                         id="price"
@@ -79,28 +78,11 @@ export default function NewCategoryBody() {
                     />
                 </div>
 
-                <div>
-                    <Label htmlFor="idCategory" className="block text-sm font-medium text-gray-700">
-                        Danh mục sản phẩm
-                    </Label>
-                    <Select value={idCategory} onValueChange={handleCategoryChange}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Chọn danh mục" />
-                        </SelectTrigger>
-                        <SelectContent>
-
-                            {CATEGORIES.map((category) => (
-                                <SelectItem key={category.id} value={category.id}>
-                                    {category.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+              
 
                 <div>
                     <Button type="submit" className="w-full mt-4">
-                        Thêm sản phẩm
+                        Thêm danh mục
                     </Button>
                 </div>
             </form>

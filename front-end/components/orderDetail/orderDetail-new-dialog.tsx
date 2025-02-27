@@ -41,7 +41,7 @@ export default function NewOrderDetailDialog({ currentOrder,isChanged, setIsChan
             quantity: quantity.toString(),
             total: total.toString(),
             note: note,
-            order: currentOrder
+            orderId: currentOrder.id
         };
         ORDER_DETAILS.push(newOrderDetail);
         toast("Sản phẩm đã được thêm");

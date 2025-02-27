@@ -1,9 +1,11 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSideBar } from "@/components/sidebar.tsx/appsidebar";
 import { Toaster } from "sonner";
+import ClientAuthWrapper from "@/components/login/ClientAuthWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,6 +28,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
@@ -37,7 +40,8 @@ export default function RootLayout({
             {children}
           </SidebarInset>
         </SidebarProvider>
-        <Toaster/>
+        <Toaster />
+
       </body>
     </html>
   );

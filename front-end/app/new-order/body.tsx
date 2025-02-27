@@ -1,5 +1,5 @@
 "use client"
-import { OrderStatus, OrderType } from "@/components/order/enums";
+import { OrderStatus } from "@/components/order/enums";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,20 +16,12 @@ import { Order } from "@/components/order/order-model";
 
 export default function NewOrderBody() {
     const route = useRouter();
-    const [orderType, setOrderType] = useState(OrderType.InStore);
     const [customerId, setCustomerId] = useState('2');
     const [note, setNote] = useState('');
     const [newCustomerName, setNewCustomerName] = useState('');
     const [newCustomerPhone, setNewCustomerPhone] = useState('');
     const [isOpen, setIsOpen] = useState(false);
-    const handleOrderTypeChange = (value: string) => {
-        if (value === '1') {
-            setOrderType(OrderType.InStore);
-            setCustomerId('2');
-        }
-        else
-            setOrderType(OrderType.Online);
-    };
+   
     const handleCustomerChange = (value: string) => {
         setCustomerId(value);
     };
@@ -44,7 +36,7 @@ export default function NewOrderBody() {
         }
 
         const newCustomer = {
-            id: (CUSTOMERS.length + 1).toString(), // Giả sử ID mới là độ dài của mảng + 1
+            id: (CUSTOMERS.length + 1).toString(),
             name: newCustomerName,
             phone: newCustomerPhone
         };
@@ -67,7 +59,6 @@ export default function NewOrderBody() {
 
         const newOrder: Order = {
             id: (ORDER.length + 1).toString(),
-            orderType: orderType,
             orderStatus: OrderStatus.New,
             customerName: CUSTOMERS.findLast(c => c.id === customerId)?.name ?? '',
             note: note,
@@ -81,10 +72,9 @@ export default function NewOrderBody() {
         toast("Tạo đơn hàng thành công", {
             description: `Đơn hàng đã được tạo với ID khách hàng: ${customerId}`,
         });
-        route.replace(`/order/${newOrder.id}`)
+        route.replace(`/order/?id=${newOrder.id}`)
         setCustomerId('');
         setNote('');
-        setOrderType(OrderType.InStore);
     };
 
     const newCustomerClick = () => {
@@ -98,22 +88,8 @@ export default function NewOrderBody() {
             <h2 className="text-lg font-semibold">Tạo Đơn Hàng Mới</h2>
 
             <form id="order-form" onSubmit={handleSubmit} className="space-y-4 mt-4">
-                <div>
-                    <Label htmlFor="orderType" className="block text-sm font-medium text-gray-700">
-                        Loại đơn hàng
-                    </Label>
-                    <Select value={orderType.toString()} onValueChange={handleOrderTypeChange}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Chọn loại đơn hàng" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value='1'>Tại cửa hàng</SelectItem>
-                            <SelectItem value='0'>Giao hàng</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
 
-                {orderType === OrderType.Online && <div>
+                <div>
                     <Label htmlFor="customerId" className="block text-sm font-medium text-gray-700">
                         Khách hàng
                     </Label>
@@ -131,7 +107,7 @@ export default function NewOrderBody() {
                         </SelectContent>
                     </Select>
                     <Button className="mt-2" onClick={e => { e.preventDefault(); newCustomerClick() }}>Thêm khách hàng mới</Button>
-                </div>}
+                </div>
 
                 <div>
                     <Label htmlFor="note" className="block text-sm font-medium text-gray-700">

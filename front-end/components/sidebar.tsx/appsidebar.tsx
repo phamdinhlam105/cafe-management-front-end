@@ -19,68 +19,77 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import Link from "next/link";
 import { SidebarStructure } from "./structure";
 import { usePathname } from "next/navigation";
-
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const path = usePathname();
-    return (
-        <Sidebar {...props} className="z-30 shadow-md"
-        >
-            <SidebarHeader className="py-5">
-                <Link href={'/'} className="flex items-center">
-                    <h2
-                        className="ml-2 text-xl font-bold bg-gradient-to-r from-green-500 to-yellow-300 text-transparent bg-clip-text">
-                        CAFE MANAGEMENT
-                    </h2>
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    useEffect(() => {
+        const token = Cookies.get("loggedIn");
+        setIsLoggedIn(!!token);
+    }, [path]);
 
-                </Link>
-            </SidebarHeader>
-            <SidebarContent className="gap-0">
-                {SidebarStructure.map((item) => (
-                    <Collapsible
-                        key={item.title}
-                        title={item.title}
-                        defaultOpen={false}
-                        className="group/collapsible"
-                    >
-                        <SidebarGroup>
-                            <SidebarGroupLabel
-                                asChild
-                                className="h-10 group/label text-md text-sidebar-foreground "
-                            >
-                                <div className={`items-center flex rounded-md transition-colors duration-100 
-                                    ${(path.includes(item.url) && item.url !== '/') || (path==='/' && item.url==='/order') ?
-                                        'bg-primary text-white dark:text-black' :
-                                        'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}>
-                                    <Link className="flex px-4" href={item.url}>    
-                                        {<item.icon className="mr-2 w-6 h-6" />}
-                                        {item.title}{" "}
-                                    </Link>
-                                    {item.items ? <CollapsibleTrigger
-                                        data-state={path.includes(item.url + '/') ? "open" : "closed"}
-                                        className="ml-auto">
-                                        <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:-rotate-180" />
-                                    </CollapsibleTrigger> : ""}
-                                </div>
-                            </SidebarGroupLabel>
-                            <CollapsibleContent>
-                                <SidebarGroupContent>
-                                    <SidebarMenu>
-                                        {item.items ? item.items.map((item) => (
-                                            <SidebarMenuItem key={item.title} >
-                                                <SidebarMenuButton asChild className="h-10 px-8">
-                                                    <a className={`${path.includes(item.url) ? 'text-primary hover:text-primary' : ''}`} href={item.url}>{item.title}</a>
-                                                </SidebarMenuButton>
-                                            </SidebarMenuItem>
-                                        )) : ""}
-                                    </SidebarMenu>
-                                </SidebarGroupContent>
-                            </CollapsibleContent>
-                        </SidebarGroup>
-                    </Collapsible>
-                ))}
-            </SidebarContent>
-            <SidebarRail />
-        </Sidebar>
-    )
+    if (!isLoggedIn) {
+        return null;
+    }
+
+    return <Sidebar {...props}  className="z-30 shadow-md"
+    >
+        <SidebarHeader className="py-5">
+            <Link href={'/'} className="flex items-center">
+                <h2
+                    className="ml-2 text-xl font-bold bg-gradient-to-r from-green-500 to-yellow-300 text-transparent bg-clip-text">
+                    CAFE MANAGEMENT
+                </h2>
+
+            </Link>
+        </SidebarHeader>
+        <SidebarContent className="gap-0">
+            {SidebarStructure.map((item) => (
+                <Collapsible
+                    key={item.title}
+                    title={item.title}
+                    defaultOpen={false}
+                    className="group/collapsible"
+                >
+                    <SidebarGroup>
+                        <SidebarGroupLabel
+                            asChild
+                            className="h-10 group/label text-md text-sidebar-foreground "
+                        >
+                            <div className={`items-center flex rounded-md transition-colors duration-100 
+                                    ${(path.includes(item.url) && item.url !== '/') || (path === '/' && item.url === '/order') ?
+                                    'bg-primary text-white dark:text-black' :
+                                    'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}>
+                                <Link className="flex px-4" href={item.url}>
+                                    {<item.icon className="mr-2 w-6 h-6" />}
+                                    {item.title}{" "}
+                                </Link>
+                                {item.items ? <CollapsibleTrigger
+                                    data-state={path.includes(item.url + '/') ? "open" : "closed"}
+                                    className="ml-auto">
+                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:-rotate-180" />
+                                </CollapsibleTrigger> : ""}
+                            </div>
+                        </SidebarGroupLabel>
+                        <CollapsibleContent>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {item.items ? item.items.map((item) => (
+                                        <SidebarMenuItem key={item.title} >
+                                            <SidebarMenuButton asChild className="h-10 px-8">
+                                                <a className={`${path.includes(item.url) ? 'text-primary hover:text-primary' : ''}`} href={item.url}>{item.title}</a>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    )) : ""}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </CollapsibleContent>
+                    </SidebarGroup>
+                </Collapsible>
+            ))}
+        </SidebarContent>
+        <SidebarRail />
+    </Sidebar>
 }

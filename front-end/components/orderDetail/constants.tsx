@@ -1,4 +1,4 @@
-import { OrderStatus, OrderType } from "../order/enums";
+
 import { OrderDetail } from "./orderDetail-model";
 
 export const ORDER_DETAILS: OrderDetail[] = [
@@ -8,18 +8,7 @@ export const ORDER_DETAILS: OrderDetail[] = [
         quantity: "1",
         total: "20000",
         note: "ít đá",
-        order: {
-
-            id: "1",
-            price: "72000",
-            quantity: "3",
-            note: "ít đá",
-            customerName: "",
-            orderType: OrderType.Online,
-            orderStatus: OrderStatus.New,
-            createAt: "24/11/2024 08:00:00",
-            details: [],
-        }
+        orderId: "1"
     },
     {
         id: "2",
@@ -27,18 +16,7 @@ export const ORDER_DETAILS: OrderDetail[] = [
         quantity: "1",
         total: "22000",
         note: "",
-        order: {
-
-            id: "1",
-            price: "72000",
-            quantity: "3",
-            note: "ít đá",
-            customerName: "",
-            orderType: OrderType.Online,
-            orderStatus: OrderStatus.New,
-            createAt: "24/11/2024 08:00:00",
-            details: [],
-        }
+        orderId: "1"
     },
     {
         id: "3",
@@ -46,18 +24,7 @@ export const ORDER_DETAILS: OrderDetail[] = [
         quantity: "1",
         total: "30000",
         note: "",
-        order: {
-
-            id: "1",
-            price: "72000",
-            quantity: "3",
-            note: "ít đá",
-            customerName: "",
-            orderType: OrderType.Online,
-            orderStatus: OrderStatus.New,
-            createAt: "24/11/2024 08:00:00",
-            details: [],
-        }
+        orderId: "1"
     },
     {
         id: "4",
@@ -65,17 +32,7 @@ export const ORDER_DETAILS: OrderDetail[] = [
         quantity: "1",
         total: "30000",
         note: "",
-        order: {
-            id: "3",
-            price: "72000",
-            quantity: "3",
-            note: "ít đá",
-            customerName: "Khách tại quán",
-            orderType: OrderType.InStore,
-            orderStatus: OrderStatus.Completed,
-            createAt: "24/11/2024 08:00:00",
-            details: []
-        }
+        orderId: "3"
     },
     {
         id: "5",
@@ -83,18 +40,7 @@ export const ORDER_DETAILS: OrderDetail[] = [
         quantity: "1",
         total: "20000",
         note: "ít đá",
-        order: {
-
-            id: "2",
-            price: "72000",
-            quantity: "3",
-            note: "ít đá",
-            customerName: "",
-            orderType: OrderType.Online,
-            orderStatus: OrderStatus.New,
-            createAt: "24/11/2024 08:00:00",
-            details: [],
-        }
+        orderId: "2"
     },
     {
         id: "6",
@@ -102,18 +48,7 @@ export const ORDER_DETAILS: OrderDetail[] = [
         quantity: "1",
         total: "22000",
         note: "",
-        order: {
-
-            id: "2",
-            price: "72000",
-            quantity: "3",
-            note: "ít đá",
-            customerName: "",
-            orderType: OrderType.Online,
-            orderStatus: OrderStatus.New,
-            createAt: "24/11/2024 08:00:00",
-            details: [],
-        }
+        orderId: "2"
     },
     {
         id: "7",
@@ -121,17 +56,6 @@ export const ORDER_DETAILS: OrderDetail[] = [
         quantity: "1",
         total: "30000",
         note: "",
-        order: {
-
-            id: "2",
-            price: "72000",
-            quantity: "3",
-            note: "ít đá",
-            customerName: "",
-            orderType: OrderType.Online,
-            orderStatus: OrderStatus.New,
-            createAt: "24/11/2024 08:00:00",
-            details: [],
-        }
+        orderId: "2"
     },
 ]

@@ -29,7 +29,7 @@ export default function StockBody() {
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
             <Button
                 className="border hover:bg-gray-100 hover:text-neutral-900 transition-color duration-200">
-                <Link href='/new-order'>Nhập kho</Link>
+                <Link href='/stock/import'>Nhập kho</Link>
             </Button>
             <div className="text-md font-bold">
                 Ngày: <span className="font-normal text-gray-500">{stock.createDate}</span>

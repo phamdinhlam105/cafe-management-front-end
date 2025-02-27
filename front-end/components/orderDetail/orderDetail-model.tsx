@@ -2,7 +2,7 @@ import { Order } from "../order/order-model";
 
 export interface OrderDetail {
     id: string,
-    order: Order | undefined,
+    orderId: string,
     productName: string,
     quantity: string,
     total: string,

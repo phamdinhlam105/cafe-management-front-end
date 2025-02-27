@@ -1,4 +1,4 @@
-import {Settings, House, Wine, ShoppingCart, List, Layers, Newspaper, Gift } from "lucide-react";
+import { House, Wine, ShoppingCart, List, Layers, Newspaper, Gift, SquareUser } from "lucide-react";
 
 export const SidebarStructure = [
     
@@ -8,13 +8,19 @@ export const SidebarStructure = [
         icon: House,
     },
     {
+        title: "Khách hàng",
+        url: "/customer",
+        icon: SquareUser,
+        
+    },
+    {
         title: "Đơn hàng",
         url: "/order",
         icon: ShoppingCart,
         items: [
             {
                 title: "Toàn bộ chi tiết",
-                url: "#",
+                url: "/order/all-detail",
             },
             {
                 title:"Đơn hàng mới",
@@ -43,8 +49,12 @@ export const SidebarStructure = [
                 url: "/stock/import",
             },
             {
-                title: "Tồn kho",
+                title: "Cập nhật kho",
                 url: "#",
+            },
+            {
+                title: "Nguyên liệu",
+                url: "/ingredient",
             },
         ],
     },
