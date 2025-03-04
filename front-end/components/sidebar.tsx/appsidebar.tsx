@@ -17,7 +17,7 @@ import {
 } from "../ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import Link from "next/link";
-import { SidebarStructure } from "./structure";
+import { EmployeeSidebar, SidebarStructure } from "./structure";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -46,7 +46,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </Link>
         </SidebarHeader>
         <SidebarContent className="gap-0">
-            {SidebarStructure.map((item) => (
+            {EmployeeSidebar.map((item) => (
                 <Collapsible
                     key={item.title}
                     title={item.title}

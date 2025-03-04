@@ -4,6 +4,7 @@ import DefaultAvatar from "@/components/profile/default-avatar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import ProfileEdit from "./edit";
 
 export default function ProfileBody() {
 
@@ -35,36 +36,37 @@ export default function ProfileBody() {
                         <p className="text-gray-50 text-md ml-40">{PROFILE.mail}</p>
                     </div>
                     <div>
-                        <Button className="h-10 ml-auto text-white p-2 px-4 rounded-md text-sm font-semibold">
-                            Sửa thông tin cá nhân
-                        </Button>
+                        <ProfileEdit />
                     </div>
                 </div>
+                <div className="flex justify-between">
 
-                <div className="border rounded-md w-7/12 shadow-md bg-background mt-10">
-                    <h3 className="font-bold my-2 mx-4">Thông tin của tôi</h3>
-                    <Separator />
-                    <div className="py-4 px-4">
-                        <h4 className="font-bold uppercase mb-3">Tiểu sử</h4>
-                        <div className="grid grid-cols-2">
-                            <div className="space-y-2">
-                                <h4 className="font-bold text-sm">SỐ ĐIỆN THOẠI</h4>
-                                <p className="text-sm">{PROFILE.phone}</p>
-                                <h4 className="font-bold text-sm">EMAIL</h4>
-                                <p className="text-sm">{PROFILE.mail}</p>
-                                <h4 className="font-bold text-sm">Birthday</h4>
-                                <p className="text-sm">{PROFILE.birthDate}</p>
-                            </div>
-                            <div className="space-y-2">
-                                <h4 className="font-bold text-sm">Tuổi</h4>
-                                <p className="text-sm">{ '28'}</p>
-                                <h4 className="font-bold text-sm">Địa chỉ</h4>
-                                <p className="text-sm">{PROFILE.country}</p>
+
+                    <div className="border rounded-md w-7/12 shadow-md bg-background mt-10">
+                        <h3 className="font-bold my-2 mx-4">Thông tin của tôi</h3>
+                        <Separator />
+                        <div className="py-4 px-4">
+                            <h4 className="font-bold uppercase mb-3">Tiểu sử</h4>
+                            <div className="grid grid-cols-2">
+                                <div className="space-y-2">
+                                    <h4 className="font-bold text-sm">SỐ ĐIỆN THOẠI</h4>
+                                    <p className="text-sm">{PROFILE.phone}</p>
+                                    <h4 className="font-bold text-sm">EMAIL</h4>
+                                    <p className="text-sm">{PROFILE.mail}</p>
+                                    <h4 className="font-bold text-sm">Birthday</h4>
+                                    <p className="text-sm">{PROFILE.birthDate}</p>
+                                </div>
+                                <div className="space-y-2">
+                                    <h4 className="font-bold text-sm">Tuổi</h4>
+                                    <p className="text-sm">{'28'}</p>
+                                    <h4 className="font-bold text-sm">Địa chỉ</h4>
+                                    <p className="text-sm">{PROFILE.country}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                   
                 </div>
-
             </div>
         </div>
     </div>

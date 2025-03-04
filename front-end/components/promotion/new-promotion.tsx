@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { PROMOTIONS } from "./promotion-constants"
+import { toast } from "sonner"
 
 export default function NewPromotion() {
     const [name, setName] = useState("")
@@ -25,6 +26,10 @@ export default function NewPromotion() {
 
         PROMOTIONS.push(newPromotion)
         setOpen(false) 
+        toast("Thêm khuyến mãi thành công",{
+            description:"Đã thêm thành công khuyến mãi mới"
+        }
+        )
         setName("")
         setDescription("")
         setDiscount("")

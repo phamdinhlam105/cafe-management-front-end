@@ -1,6 +1,6 @@
 export const PROFILE = {
     id: '1',
-    name: 'Pham Dinh Lam',
+    name: 'Phạm Đình Lâm',
     mail: 'phamdinhlam105@gmail.com',
     phone: '+84291 3867 195',
     birthDate: '10/05/1996',

@@ -5,7 +5,7 @@ import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Shield, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Header({ title }: { title: string }) {
@@ -41,6 +41,13 @@ export default function Header({ title }: { title: string }) {
                             className="flex p-2 hover:bg-accent hover:outline-none rounded-md hover:cursor-pointer">
                             <User />
                             Thông tin cá nhân
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            onClick={() => router.push('/profile')}
+                            className="flex p-2 hover:bg-accent hover:outline-none rounded-md hover:cursor-pointer">
+                            <Shield />
+                            <span className=" uppercase">Admin</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="flex p-2 hover:bg-accent hover:outline-none hover:cursor-pointer rounded-md">

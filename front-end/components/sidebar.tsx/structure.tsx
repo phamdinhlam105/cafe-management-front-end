@@ -76,16 +76,59 @@ export const SidebarStructure = [
     {
         title: "Báo cáo",
         url: "/report",
-        icon: Newspaper,
+        icon: Newspaper
+    },
+]
+
+export const EmployeeSidebar = [
+    
+    {
+        title: "Trang chủ",
+        url: "/",
+        icon: House,
+    },
+    {
+        title: "Khách hàng",
+        url: "/customer",
+        icon: SquareUser,
+        
+    },
+    {
+        title: "Đơn hàng",
+        url: "/order",
+        icon: ShoppingCart,
         items: [
             {
-                title: "Ngày hôm nay",
-                url: "#",
+                title: "Toàn bộ chi tiết",
+                url: "/order/all-detail",
             },
             {
-                title: "Nhiều ngày",
+                title:"Đơn hàng mới",
+                url:"/new-order"
+            }
+        ],
+    },
+    {
+        title: "Sản phẩm",
+        url: "/product",
+        icon: Wine,
+    },
+
+    {
+        title: "Kho hàng",
+        url: "/stock",
+        icon: Layers,
+        items: [
+            {
+                title: "Nhập kho",
+                url: "/stock/import",
+            },
+            {
+                title: "Cập nhật kho",
                 url: "#",
             },
         ],
     },
+   
+   
 ]
