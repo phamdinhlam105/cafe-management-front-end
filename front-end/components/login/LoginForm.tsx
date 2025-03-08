@@ -5,29 +5,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { loginRequest } from "../service/login-service";
+import { useRouter } from "next/navigation";
 
-interface LoginFormProps {
-  onSubmit: (username: string, password: string) => void;
-}
-
-export default function LoginForm({ onSubmit }: LoginFormProps) {
+export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
     try {
-      await onSubmit(username, password);
+      const data = await loginRequest(username, password);
+      if(data.error){
+        setError(data.error);
+      }
+      
+      else{
+        alert(`Xin chào ${data.username}!`);
+
+      }
+      router.push('/order')
     } catch (err) {
-      setError("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">

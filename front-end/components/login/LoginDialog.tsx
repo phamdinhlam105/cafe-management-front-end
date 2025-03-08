@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export default function LoginDialog() {
     const router = useRouter();
-    const [action, setAction] = useState(0); // 0: Đăng nhập, 1: Đăng ký
+    const [action, setAction] = useState(0);
 
     return (
         <Dialog open={true}>
@@ -24,19 +24,8 @@ export default function LoginDialog() {
                     </DialogDescription>
                 </DialogHeader>
 
-                {/* Hiển thị form tùy theo action */}
                 {action === 0 ? (
-                    <LoginForm
-                        onSubmit={async (username, password) => {
-                            if (username === "admin" && password === "admin") {
-                                Cookies.set("loggedIn", "true", { expires: 1 });
-                                toast.success("Đăng nhập thành công!");
-                                router.push("/");
-                            } else {
-                                toast.error("Tên đăng nhập hoặc mật khẩu không đúng!");
-                            }
-                        }}
-                    />
+                    <LoginForm/>
                 ) : (
                     <RegisterForm />
                 )}

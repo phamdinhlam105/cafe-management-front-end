@@ -3,12 +3,13 @@ import { OrderStatus } from "./enums"
 
 export interface Order {
     id: string,
-    price: string,
+    total: string,
     quantity: string,
     note: string,
-    customerName: string,
+    customerId?: string,
     orderStatus: OrderStatus,
     createAt: string,
+    promotionId?:string,
     details: OrderDetail[]
 }
 
