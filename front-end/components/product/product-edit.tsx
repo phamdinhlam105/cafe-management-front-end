@@ -5,7 +5,6 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { CATEGORIES } from "../category/constants";
 import { toast } from "sonner";
 import { PRODUCTS } from "./constants";
 
@@ -14,9 +13,10 @@ export default function ProductEdit({ product }: { product: Product }) {
     const [price, setPrice] = useState(product.price);
     const [img, setImg] = useState(product.img);
     const [category, setCategory] = useState(product.category);
+    const [categories,setCategories] = useState<Category[]>([]);
 
     const handleCategoryChange = (value: string) => {
-        const newCategory = CATEGORIES.findLast(c => c.id === value);
+        const newCategory = categories.findLast(c => c.id === value);
         if (newCategory)
             setCategory(newCategory);
     }
@@ -93,7 +93,7 @@ export default function ProductEdit({ product }: { product: Product }) {
                                 </SelectTrigger>
                                 <SelectContent>
 
-                                    {CATEGORIES.map((category) => (
+                                    {categories.map((category) => (
                                         <SelectItem key={category.id} value={category.id}>
                                             {category.name}
                                         </SelectItem>

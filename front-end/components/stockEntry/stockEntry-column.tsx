@@ -25,7 +25,7 @@ export const getStockEntryColumn = (
         {
             accessorKey: "measurementUnit",
             header: ({ column }) => <ColumnHeader column={column} title="Đơn vị" />,
-            cell: ({ row }) => <div className="text-md text-gray-400">{row.original.ingredient.measurement}</div>
+            cell: ({ row }) => <div className="text-md text-gray-400">{row.original.ingredient.measurementUnit}</div>
         },
 
         {
@@ -81,7 +81,7 @@ export const getStockEntryColumn = (
                     (detail) => detail.ingredient.id === row.original.ingredient.id
                 );
         
-                return <div className="text-md text-gray-400">{stockDetail?.remain ?? 0}</div>;
+                return <div className="text-md text-gray-400">{stockDetail?.stockRemain ?? 0}</div>;
             },
         },
         {

@@ -1,24 +1,38 @@
 "use client"
 import { StockDetail } from "@/components/stockDetail/stockDetail-model";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { STOCK } from "@/components/stock/stock-constants";
 import { Stock } from "@/components/stock/stock-model";
-import { STOCK_DETAILS } from "@/components/stockDetail/stockDetail-constants";
 import { DataTable } from "@/components/table/data-table";
 import { getStockDetailColumns } from "@/components/stockDetail/stockDetail-conlumn";
 import SearchButton from "@/components/item-list/search-button";
+import { callWithAuth } from "@/components/service/token-handler";
+import { getDetailByDate } from "@/components/service/stock-service";
 
 export default function StockBody() {
-    const [data, setData] = useState<StockDetail[]>(STOCK_DETAILS);
+    const [data, setData] = useState<StockDetail[]>([]);
+    const [filterData,setFilterData] = useState<StockDetail[]>(data);
     const [stock,setStock] = useState<Stock>(STOCK);
     const [search, setSearch] = useState('');
+
+   const fetchStocks = async () => {
+        const result = await callWithAuth(await getDetailByDate(stock.createDate));
+        if (result) {
+            setData(result);
+        }
+    };
+    useEffect(() => {
+        fetchStocks();
+        setFilterData(data);
+    }, []);
+
     const handleSearchClick = () => {
         if(search)
-            setData(data.filter(item => item.ingredient.name.includes(search)));
+            setFilterData(data.filter(item => item.ingredient.name.includes(search)));
         else
-            setData(STOCK_DETAILS);
+        setFilterData(data);
     }
     const onDelete = (idRow:string)=>{
 
@@ -35,6 +49,6 @@ export default function StockBody() {
                 Ngày: <span className="font-normal text-gray-500">{stock.createDate}</span>
             </div>
         </div>
-        <DataTable columns={columns} data={data} onDelete={onDelete}/>
+        <DataTable columns={columns} data={filterData} onDelete={onDelete}/>
     </div>
 }

@@ -4,8 +4,6 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { CATEGORIES } from "../category/constants";
 import { toast } from "sonner";
 
 export default function CategoryEdit({ category }: { category: Category }) {

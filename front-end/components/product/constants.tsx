@@ -6,9 +6,9 @@ export const PRODUCTS: Product[] =[
         price: "30000",
         img:'',
         category: {
-            id:"1",
-            name:"caffe",
-            products:null
+            id: "1",
+            name: "caffe",
+            desciprtion: ""
         }
     },
     {
@@ -19,7 +19,7 @@ export const PRODUCTS: Product[] =[
         category: {
             id:"1",
             name:"caffe",
-            products:null
+            desciprtion: ""
         }
     },
     {
@@ -30,7 +30,7 @@ export const PRODUCTS: Product[] =[
         category: {
             id:"2",
             name:"Nước ép",
-            products:null
+            desciprtion: ""
         }
     },
     {
@@ -41,7 +41,7 @@ export const PRODUCTS: Product[] =[
         category: {
             id:"3",
             name:"Soda",
-            products:null
+            desciprtion: ""
         }
     },
     {
@@ -52,7 +52,7 @@ export const PRODUCTS: Product[] =[
         category: {
             id:"4",
             name:"Nước đóng chai",
-            products:null
+           desciprtion: ""
         }
     },
     {
@@ -63,7 +63,7 @@ export const PRODUCTS: Product[] =[
         category: {
             id:"4",
             name:"Nước đóng chai",
-            products:null
+            desciprtion: ""
         }
     }
 ]

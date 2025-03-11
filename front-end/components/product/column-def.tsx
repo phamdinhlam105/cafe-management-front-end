@@ -40,7 +40,7 @@ export const getProductColumns = ({ onDelete }: { onDelete: (idRow: string) => v
         accessorKey: "category",
         header: ({ column }) => <ColumnHeader column={column} title="Loại sản phẩm" />,
         cell: ({ row }) => {
-            const category = row.getValue("category") as Category;
+            const category = row.original.category as Category;
             return <div className="text-md text-gray-400">{category.name}</div>;
         }
     },

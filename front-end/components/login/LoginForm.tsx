@@ -27,11 +27,11 @@ export default function LoginForm() {
       }
       
       else{
-        alert(`Xin chào ${data.username}!`);
+        alert(`Xin chào ${data.userName}!`);
 
       }
       router.push('/order')
-    } catch (err) {
+    } catch (err:any) {
       setError(err.message);
     } finally {
       setLoading(false);

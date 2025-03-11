@@ -1,5 +1,5 @@
 "use client"
-import { CATEGORIES } from "@/components/category/constants";
+
 import { PRODUCTS } from "@/components/product/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ export default function NewProductBody() {
     const [price, setPrice] = useState("");
     const [idCategory, setIdCategory] = useState("");
     const [img, setImg] = useState('');
+    const [categories,setCategories] = useState<Category[]>([]);
     const [newProduct, setNewProduct] = useState<Product>(
         {
             id: '',
@@ -34,7 +35,7 @@ export default function NewProductBody() {
             alert('Hãy điền đầy đủ thông tin sản phẩm');
             return;
         }
-        const chosenCategory = CATEGORIES.findLast(c => c.id === idCategory);
+        const chosenCategory = categories.findLast(c => c.id === idCategory);
 
         const newProductData = {
             id: (PRODUCTS.length + 1).toString(),
@@ -45,7 +46,6 @@ export default function NewProductBody() {
         } as Product;
         
         PRODUCTS.push(newProductData);
-        console.log(PRODUCTS);
         toast("Thêm sản phẩm thành công", {
             description: `Sản phẩm ${name} đã được thêm thành công`
         });
@@ -108,7 +108,7 @@ export default function NewProductBody() {
                             </SelectTrigger>
                             <SelectContent>
 
-                                {CATEGORIES.map((category) => (
+                                {categories.map((category) => (
                                     <SelectItem key={category.id} value={category.id}>
                                         {category.name}
                                     </SelectItem>

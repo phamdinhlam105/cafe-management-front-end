@@ -20,7 +20,7 @@ export const getStockDetailColumns = (): ColumnDef<StockDetail>[] => [
     {
         accessorKey: "measurementUnit",
         header: ({ column }) => <ColumnHeader column={column} title="Đơn vị tính" />,
-        cell: ({ row }) => <div className="text-md text-gray-400">{row.original.ingredient.measurement}</div>
+        cell: ({ row }) => <div className="text-md text-gray-400">{row.original.ingredient.measurementUnit}</div>
     },
     {
         accessorKey: "startOfDay",

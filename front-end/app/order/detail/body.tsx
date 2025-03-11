@@ -1,6 +1,5 @@
 "use client"
 import SearchButton from "@/components/item-list/search-button";
-import { ORDER } from "@/components/order/constants";
 import { OrderStatus } from "@/components/order/enums";
 import { Order } from "@/components/order/order-model";
 import { getOrderDetailColumns } from "@/components/orderDetail/column-def";
@@ -10,6 +9,9 @@ import { OrderDetail } from "@/components/orderDetail/orderDetail-model";
 import NewOrderDetailDialog from "@/components/orderDetail/orderDetail-new-dialog";
 import { PROMOTIONS } from "@/components/promotion/promotion-constants";
 import { Promotion } from "@/components/promotion/promotion-model";
+import { getByOrderId } from "@/components/service/order-detail-service";
+import { getOrderById } from "@/components/service/order-service";
+import { callWithAuth } from "@/components/service/token-handler";
 import { DataTable } from "@/components/table/data-table";
 import {
     Select,
@@ -34,13 +36,22 @@ export default function OrderDetailBody() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id");
 
+    const fetchOrder = async () => {
+        if (orderId) {
+            const result = await callWithAuth(await getOrderById(orderId));
+            if (result) {
+                setCurrentOrder(result);
+            }
+            const orderDetails = await callWithAuth(await getByOrderId(orderId));
+            if(orderDetails){
+                setData(orderDetails)
+            }
+        }
+    };
+
     useEffect(() => {
         if (orderId) {
-            const orderDetails = ORDER_DETAILS.filter(o => o.orderId === orderId);
-            setData(orderDetails);
-            const order = ORDER.findLast(o => o.id === orderId);
-            if (order)
-                setCurrentOrder(order);
+            fetchOrder();
         }
     }, [orderId]);
 
@@ -57,7 +68,7 @@ export default function OrderDetailBody() {
     }
 
     const handleSearchClick = () => {
-        if (search!=='none')
+        if (search !== 'none')
             setData(data.filter(item => item.productName.toLowerCase().includes(search.toLowerCase())));
         else
             if (orderId) {
@@ -103,7 +114,7 @@ export default function OrderDetailBody() {
                 chosenPromotion && <>
                     <h2>Khuyến mãi: <span className="text-gray-600">
                         {(
-                            data.reduce((acc, od) => acc + Number(od.total), 0) * chosenPromotion?.value / 100).toLocaleString()} đ
+                            data.reduce((acc, od) => acc + Number(od.total), 0) * chosenPromotion.value / 100).toLocaleString()} đ
                     </span></h2>
                     <h2>Phải thanh toán: <span className="text-gray-600">
                         {(

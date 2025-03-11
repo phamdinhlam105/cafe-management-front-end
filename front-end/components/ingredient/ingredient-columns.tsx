@@ -16,11 +16,18 @@ export const getIngredientColumns = (): ColumnDef<Ingredient>[] => [
         header: ({ column }) => <ColumnHeader column={column} title="Tên nguyên liệu" />,
         cell: ({ row }) => <div className="text-md text-gray-400">{row.original.name}</div>
     },
-    
+
     {
         accessorKey: "measurementUnit",
         header: ({ column }) => <ColumnHeader column={column} title="Đơn vị tính" />,
-        cell: ({ row }) => <div className="text-md text-gray-400">{row.original.measurement}</div>
+        cell: ({ row }) => <div className="text-md text-gray-400">{row.original.measurementUnit}</div>
     },
-  
+    {
+        accessorKey: "pictureURL",
+        header: ({ column }) => <ColumnHeader column={column} title="Hình ảnh" />,
+        cell: ({ row }) => <div className="text-md text-gray-400">
+            {row.original.pictureURL ? <img src={row.original.pictureURL} /> :
+                "Không có hình ảnh"}
+        </div>
+    },
 ]

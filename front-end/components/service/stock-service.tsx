@@ -46,9 +46,8 @@ export const getStockRemain = async () => {
     }
 }
 
-export const getDetailByDate = async (date: Date) => {
-    const formattedDate = date.toISOString().split('T')[0]; // Chuyển thành "YYYY-MM-DD"
-    const apiUrl = `${API_URL}/bydate/stock?date=${formattedDate}`;
+export const getDetailByDate = async (date: string) => {
+    const apiUrl = `${API_URL}/bydate/stock?date=${date}`;
     const token = getAccessToken("accessToken");
     try {
         const response = await fetch(apiUrl, {

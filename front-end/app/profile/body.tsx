@@ -1,8 +1,6 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { PROFILE } from "./profile-contants";
 import DefaultAvatar from "@/components/profile/default-avatar";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import ProfileEdit from "./edit";
 

@@ -1,6 +1,10 @@
 import { House, Wine, ShoppingCart, List, Layers, Newspaper, Gift, SquareUser } from "lucide-react";
+import { SidebarModel } from "./sidebar-model";
 
-export const SidebarStructure = [
+
+
+
+export const SidebarStructure:SidebarModel[] = [
     
     {
         title: "Trang chủ",
@@ -80,7 +84,7 @@ export const SidebarStructure = [
     },
 ]
 
-export const EmployeeSidebar = [
+export const EmployeeSidebar:SidebarModel[] = [
     
     {
         title: "Trang chủ",

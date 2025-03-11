@@ -1,17 +1,19 @@
 "use client"
 
 import { DatePicker } from "@/components/date-picker";
-import { ORDER } from "@/components/order/constants";
 import { getOrderDetailColumns } from "@/components/orderDetail/column-def";
 import { ORDER_DETAILS } from "@/components/orderDetail/constants";
 import { OrderDetail } from "@/components/orderDetail/orderDetail-model";
+import { getAllOrderDetail } from "@/components/service/order-detail-service";
+import { callWithAuth } from "@/components/service/token-handler";
 import { DataTable } from "@/components/table/data-table";
 import { useEffect, useState } from "react";
 
 export default function AllOrderDetailBody() {
 
     const [selectedDate, setSelectedDate] = useState<Date>(new Date);
-    const [data, setData] = useState<OrderDetail[]>(ORDER_DETAILS);
+    const [data, setData] = useState<OrderDetail[]>([]);
+    const [filterData,setFilterData] = useState<OrderDetail[]>(data);
 
       const cleanDate = (dateStr: string): Date => {
         // Lấy phần ngày đầu tiên, ví dụ "24/11/2024"
@@ -26,15 +28,19 @@ export default function AllOrderDetailBody() {
         const year = Number(parts[2]);
         return new Date(year, month - 1, day);
       }
+
+      const fetchAllDetails = async ()=>{
+        const result = await callWithAuth(getAllOrderDetail);
+        if(result){
+          setData(result);
+          setFilterData(result);
+        }
+      }
+
+
     useEffect(() => {
-        const ordersInSelectedDate = ORDER.filter((order) => {
-            const orderDate = cleanDate(order.createAt)
-            console.log(orderDate);
-          return orderDate.getTime() === selectedDate.getTime();
-        });
-        const orderIds = ordersInSelectedDate.map((order) => order.id);
-        const filteredDetails = ORDER_DETAILS.filter((detail) => orderIds.includes(detail.orderId));
-        setData(filteredDetails);
+      fetchAllDetails();
+       
       }, [selectedDate]);
 
     const onDelete =(idRow:string) =>{
@@ -46,6 +52,6 @@ export default function AllOrderDetailBody() {
         <div>
             Tìm kiếm theo ngày <DatePicker date={selectedDate} setDate={setSelectedDate}/>
         </div>
-        <DataTable columns={getColumns} data={data} onDelete={onDelete} />
+        <DataTable columns={getColumns} data={filterData} onDelete={onDelete} />
     </div>
 }

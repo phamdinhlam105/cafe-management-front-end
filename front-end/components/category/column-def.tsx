@@ -30,7 +30,13 @@ export const getCategoryColumns = ({ onDelete }: { onDelete: (idRow: string) => 
             return <div className="text-md text-gray-400">{products.length}</div>;
         }
     },
-
+    {
+        accessorKey: "description",
+        header: ({ column }) => <ColumnHeader column={column} title="Mô tả" />,
+        cell: ({ row }) => {
+            return <div className="text-md text-gray-400">{row.getValue("description")}</div>;
+        }
+    },
     {
         id: "actions",
         header: () => <div className="text-sm">Hành động</div>,

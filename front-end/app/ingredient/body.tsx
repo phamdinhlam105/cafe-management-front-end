@@ -2,21 +2,32 @@
 
 import { getIngredientColumns } from "@/components/ingredient/ingredient-columns";
 import { INGREDIENTS } from "@/components/ingredient/ingredient-constants";
+import { Ingredient } from "@/components/ingredient/ingredient-model";
 import NewIngredient from "@/components/ingredient/new-ingredient";
 import SearchButton from "@/components/item-list/search-button";
+import { getAllIngredient } from "@/components/service/ingredient-service";
+import { callWithAuth } from "@/components/service/token-handler";
 import { DataTable } from "@/components/table/data-table";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function IngredientBody(){
 
-    const [data, setData] = useState(INGREDIENTS);
+    const [data, setData] = useState<Ingredient[]>([]);
+    const [filterData, setFilterData] = useState<Ingredient[]>(data);
     const [search, setSearch] = useState('');
 
+const fetchIngredients = async () => {
+        const result = await callWithAuth(getAllIngredient);
+        if (result) {
+            setData(result);
+        }
+    };
     useEffect(() => {
-        setData(INGREDIENTS);
-    }, [INGREDIENTS])
+        fetchIngredients();
+        setFilterData(data);
+    }, []);
+
     const onDelete = (index: string) => {
         INGREDIENTS.slice(Number(index), Number(index) + 1);
         toast("item deleted");
@@ -24,9 +35,9 @@ export default function IngredientBody(){
 
     const handleSearchClick = () => {
         if (search)
-            setData(data.filter(item => item.name.includes(search)));
+            setFilterData(data.filter(item => item.name.includes(search)));
         else
-            setData(INGREDIENTS);
+        setFilterData(data);
     }
 
     const columns = getIngredientColumns();
@@ -35,6 +46,6 @@ export default function IngredientBody(){
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
            <NewIngredient/>
         </div>
-        <DataTable columns={columns} data={data} onDelete={onDelete} />
+        <DataTable columns={columns} data={filterData} onDelete={onDelete} />
     </div>
 }

@@ -20,14 +20,20 @@ import Link from "next/link";
 import { EmployeeSidebar, SidebarStructure } from "./structure";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { checkRole } from "../service/token-handler";
+import { SidebarModel } from "./sidebar-model";
 
 export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const path = usePathname();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [role,setRole] = useState<SidebarModel[]>();
     useEffect(() => {
-        const token = Cookies.get("loggedIn");
-        setIsLoggedIn(!!token);
+        const user = checkRole();
+        setIsLoggedIn(!!user);
+        if(user?.role==="nhân viên")
+            setRole(EmployeeSidebar);
+        else
+            setRole(SidebarStructure);
     }, [path]);
 
     if (!isLoggedIn) {
@@ -46,7 +52,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </Link>
         </SidebarHeader>
         <SidebarContent className="gap-0">
-            {EmployeeSidebar.map((item) => (
+            {role?.map((item) => (
                 <Collapsible
                     key={item.title}
                     title={item.title}

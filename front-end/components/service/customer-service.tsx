@@ -2,7 +2,7 @@ import { getAccessToken } from "./token-handler";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL + '/customer';
 
-export const addCustomer = async (name: string, phone: string, address: string) => {
+export const addCustomerService = async (name: string, phone?: string, address?: string) => {
     const token = getAccessToken("accessToken");
     try {
         const response = await fetch(`${API_URL}`, {

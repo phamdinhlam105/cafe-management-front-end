@@ -31,7 +31,7 @@ export default function ItemList({ data }: { data: Order[] }) {
                                 Khách hàng:{' '}
                             </span>
                             <p className="truncate text-sm font-bold">
-                                {item.customerName}
+                                Tại quầy
                             </p>
                             <span className="mt-1 truncate text-sm text-gray-500">
                                 Thời gian:{' '}

@@ -1,8 +1,9 @@
 "use client"
 import ItemList from "@/components/item-list/item-list";
-import { ORDER } from "@/components/order/constants";
 import { OrderStatus } from "@/components/order/enums";
 import { Order } from "@/components/order/order-model";
+import { getAllOrder } from "@/components/service/order-service";
+import { callWithAuth } from "@/components/service/token-handler";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Separator } from "@radix-ui/react-separator";
@@ -11,24 +12,32 @@ import { useEffect, useState } from "react";
 
 export default function OrderBody() {
     const [data, setData] = useState<Order[]>([]);
+    const [displayData, setDisplayData] = useState(data);
     const [filter, setFilter] = useState<string>("all");
+    const fetchOrders = async () => {
+        const result = await callWithAuth(getAllOrder);
+        if (result) {
+            setData(result);
+        }
+    };
     useEffect(() => {
-        setData(ORDER)
-    }, [ORDER]);
+        fetchOrders();
+        setDisplayData(data);
+    }, []);
 
     const filterData = (status: string) => {
         if (status === "all") {
-            setData(ORDER);
+            setDisplayData(data);
         } else
             switch (status) {
                 case '0':
-                    setData(ORDER.filter(order => order.orderStatus === OrderStatus.New));
+                    setDisplayData(data.filter(order => order.orderStatus === OrderStatus.New));
                     break;
                 case '1':
-                    setData(ORDER.filter(order => order.orderStatus === OrderStatus.Completed));
+                    setDisplayData(data.filter(order => order.orderStatus === OrderStatus.Completed));
                     break;
                 case '2':
-                    setData(ORDER.filter(order => order.orderStatus === OrderStatus.Cancelled));
+                    setDisplayData(data.filter(order => order.orderStatus === OrderStatus.Cancelled));
                     break;
                 default:
                     break;
@@ -48,7 +57,7 @@ export default function OrderBody() {
                         onClick={() => { setFilter('all'); filterData('all'); }}>
                         Tất cả
                     </DropdownMenuItem>
-                    <Separator/>
+                    <Separator />
                     <DropdownMenuItem
                         className="hover:bg-gray-200 rounded-md"
                         onClick={() => { setFilter(OrderStatus.New.toString()); filterData(OrderStatus.New.toString()); }}>
@@ -67,6 +76,6 @@ export default function OrderBody() {
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
-        <ItemList data={data} />
+        <ItemList data={displayData} />
     </div>
 }

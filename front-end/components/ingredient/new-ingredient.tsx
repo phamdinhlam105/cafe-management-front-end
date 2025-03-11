@@ -17,7 +17,7 @@ export default function NewIngredient() {
             const newIngredient = {
                 id: (INGREDIENTS.length + 1).toString(),
                 name,
-                measurement
+                measurementUnit:measurement
             }
     
             INGREDIENTS.push(newIngredient)

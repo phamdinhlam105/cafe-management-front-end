@@ -2,7 +2,7 @@ import { BaseReport } from "../base-report-model";
 import { MonthlyReport } from "../monthly/monthly-report-model";
 
 export interface QuarterlyReport extends BaseReport{
-    quarter: Number;
+    quarter: number;
     startDate:string;
     endDate:string;
     bestDay:{

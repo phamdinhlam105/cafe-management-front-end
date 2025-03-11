@@ -4,26 +4,26 @@ export const INGREDIENTS:Ingredient[]=[
     {
         id: "1",
         name: "Đường",
-        measurement: "kg"
+        measurementUnit: "kg"
     },
     {
         id: "2",
         name: "Cam",
-        measurement: "kg"
+        measurementUnit: "kg"
     },
     {
         id: "3",
         name: "Trà",
-        measurement: "gói"
+        measurementUnit: "gói"
     },
     {
         id: "4",
         name: "Chanh",
-        measurement: "kg"
+        measurementUnit: "kg"
     },
     {
         id: "5",
         name: "Pepsi",
-        measurement: "lon"
+        measurementUnit: "lon"
     },
 ]
