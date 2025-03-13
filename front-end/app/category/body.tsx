@@ -2,10 +2,10 @@
 import { getCategoryColumns } from "@/components/category/column-def";
 import { DataTable } from "@/components/table/data-table";
 import { SetStateAction, useEffect, useState } from "react";
-import Link from "next/link";
 import SearchButton from "@/components/item-list/search-button";
 import { callWithAuth } from "@/components/service/token-handler";
 import { getAllCategory } from "@/components/service/category-service";
+import NewCategory from "@/components/category/new-category";
 
 export default function CategoryBody() {
     const [data, setData] = useState<Category[]>([]);
@@ -13,33 +13,48 @@ export default function CategoryBody() {
     const [search, setSearch] = useState('');
 
     const fetchCategories = async () => {
-           const result = await callWithAuth(getAllCategory);
-           if (result) {
-               setData(result);
-           }
-       };
-       useEffect(() => {
+        const result = await callWithAuth(getAllCategory);
+        if (result) {
+            setData(result);
+        }
+    };
+
+    useEffect(() => {
         fetchCategories();
-           setFilterData(data);
-       }, []);
+    }, []);
+
+    useEffect(() => {
+        setFilterData(data);
+    }, [data]);
+
 
     const handleSearchClick = () => {
         if (search)
-            setData(data.filter(item => item.name.includes(search)));
+            setFilterData(data.filter(item => item.name.includes(search)));
         else
-            setData(data);
+        setFilterData(data);
     }
     const onDelete = (id: string) => {
-        console.log(id)
         setData((prev) => prev.map((item) => item.id === id ? { ...item, status: 'deleted' } : item));
     }
-    const columns = getCategoryColumns({ onDelete });
+
+    const onEdit = (updatedCategory: Category) => {
+        setData(prev => {
+            const exists = prev.some(cat => cat.id === updatedCategory.id);
+            return exists 
+                ? prev.map(cat => (cat.id === updatedCategory.id ? updatedCategory : cat)) 
+                : [...prev, updatedCategory];
+        });
+    };
+    
+
+    const columns = getCategoryColumns({ onEdit });
 
     return <div className="p-4 pt-10 space-y-4">
         <div className="flex justify-between">
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
-            <Link href="#" className="border rounded-md py-2 px-2 hover:bg-gray-200">Thêm danh mục</Link>
+            <NewCategory data={data} setData={setData} />
         </div>
-        <DataTable columns={columns} data={data} onDelete={onDelete}/>
+        <DataTable columns={columns} data={data} onDelete={onDelete} />
     </div>
 }

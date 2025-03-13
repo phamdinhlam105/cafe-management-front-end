@@ -3,24 +3,25 @@ import { StockDetail } from "@/components/stockDetail/stockDetail-model";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { STOCK } from "@/components/stock/stock-constants";
 import { Stock } from "@/components/stock/stock-model";
 import { DataTable } from "@/components/table/data-table";
 import { getStockDetailColumns } from "@/components/stockDetail/stockDetail-conlumn";
 import SearchButton from "@/components/item-list/search-button";
 import { callWithAuth } from "@/components/service/token-handler";
-import { getDetailByDate } from "@/components/service/stock-service";
+import { getDetailByDate, getTodayStock } from "@/components/service/stock-service";
 
 export default function StockBody() {
     const [data, setData] = useState<StockDetail[]>([]);
-    const [filterData,setFilterData] = useState<StockDetail[]>(data);
-    const [stock,setStock] = useState<Stock>(STOCK);
+    const [filterData, setFilterData] = useState<StockDetail[]>(data);
+    const [stock, setStock] = useState<Stock>();
     const [search, setSearch] = useState('');
 
-   const fetchStocks = async () => {
-        const result = await callWithAuth(await getDetailByDate(stock.createDate));
+    const fetchStocks = async () => {
+        const result = await callWithAuth(await getTodayStock());
         if (result) {
-            setData(result);
+            setStock(result);
+            if (result.dailyStockDetails)
+                setData(result.dailyStockDetails);
         }
     };
     useEffect(() => {
@@ -29,12 +30,12 @@ export default function StockBody() {
     }, []);
 
     const handleSearchClick = () => {
-        if(search)
+        if (search)
             setFilterData(data.filter(item => item.ingredient.name.includes(search)));
         else
-        setFilterData(data);
+            setFilterData(data);
     }
-    const onDelete = (idRow:string)=>{
+    const onDelete = (idRow: string) => {
 
     }
     var columns = getStockDetailColumns();
@@ -46,9 +47,9 @@ export default function StockBody() {
                 <Link href='/stock/import'>Nhập kho</Link>
             </Button>
             <div className="text-md font-bold">
-                Ngày: <span className="font-normal text-gray-500">{stock.createDate}</span>
+                Ngày: <span className="font-normal text-gray-500">{stock?.createDate}</span>
             </div>
         </div>
-        <DataTable columns={columns} data={filterData} onDelete={onDelete}/>
+        <DataTable columns={columns} data={filterData} onDelete={onDelete} />
     </div>
 }

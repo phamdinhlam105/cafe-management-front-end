@@ -1,57 +1,74 @@
 // components/orderDetail/NewProductDialog.tsx
 "use client";
 import { useState, useEffect } from "react";
-import { PRODUCTS } from "@/components/product/constants"; // Assuming you have a PRODUCTS constant
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { ORDER_DETAILS } from "./constants";
-import { OrderDetail } from "./orderDetail-model";
 import { Order } from "../order/order-model";
+import { callWithAuth } from "../service/token-handler";
+import { getAllProduct } from "../service/product-service";
+import { addOrderDetail } from "../service/order-detail-service";
+import { OrderDetail } from "./orderDetail-model";
 
 
-export default function NewOrderDetailDialog({ currentOrder,isChanged, setIsChanged }: {
+export default function NewOrderDetailDialog({ currentOrder, onEdit }: {
     currentOrder: Order,
-    isChanged:boolean,
-    setIsChanged: React.Dispatch<React.SetStateAction<boolean>>
+    onEdit: (updatedOrderDetail: OrderDetail) => void
 }) {
-    const [selectedProduct, setSelectedProduct] = useState(PRODUCTS[0]);
+    const [selectedProduct, setSelectedProduct] = useState('');
     const [quantity, setQuantity] = useState(1);
-    const [total, setTotal] = useState(Number(selectedProduct.price));
+    const [total, setTotal] = useState("");
+    const [products, setProducts] = useState<Product[]>([]);
     const [note, setNote] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
-    const handleProductChange = (id: string) => {
+    const [loading, setLoading] = useState(false);
 
-        const product = PRODUCTS.findLast(p => p.id === id);
-        if (product) {
-            setSelectedProduct(product);
-            setQuantity(1);
-            setTotal(Number(product.price));
+    const fetchProducts = async () => {
+        const result = await callWithAuth(await getAllProduct);
+        if (result) {
+            setProducts(result);
+            setSelectedProduct(products[0].id);
         }
     }
+    useEffect(() => {
+        fetchProducts();
+    })
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleProductChange = (id: string) => {
+        setSelectedProduct(id);
+    }
+
+    useEffect(() => {
+        setTotal(() => {
+            return (Number(products.findLast(p => p.id === selectedProduct)?.price) * quantity).toString();
+        })
+    }, [quantity, selectedProduct])
+
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        const newOrderDetail: OrderDetail = {
-            id: `${ORDER_DETAILS.length + 1}`,
-            productName: selectedProduct.name,
-            quantity: quantity.toString(),
-            total: total.toString(),
-            note: note,
-            orderId: currentOrder.id
+        setLoading(true);
+        const newOrderDetail = {
+            orderId: currentOrder.id,
+            quantity: quantity,
+            note: note ? note : '',
+            productId: selectedProduct
         };
-        ORDER_DETAILS.push(newOrderDetail);
-        toast("Sản phẩm đã được thêm");
-        setIsChanged(!isChanged);
-        setIsOpen(false);
+        const result = await callWithAuth(await addOrderDetail(newOrderDetail));
+        if (result) {
+            onEdit(result)
+            toast("Sản phẩm đã được thêm");
+        }
+        else {
+            toast("Thêm sản phẩm thất bại");
+        }
+        setLoading(false);
     };
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog>
             <DialogTrigger asChild>
-                <Button onClick={() => setIsOpen(true)} className="border rounded-md py-2 px-2 hover:bg-gray-200">Thêm sản phẩm</Button>
+                <Button className="border rounded-md py-2 px-2 hover:bg-gray-200">Thêm sản phẩm</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <form onSubmit={e => handleSave(e)}>
@@ -66,12 +83,12 @@ export default function NewOrderDetailDialog({ currentOrder,isChanged, setIsChan
                             <Label htmlFor="product" className="text-right">
                                 Chọn sản phẩm
                             </Label>
-                            <Select value={selectedProduct.id.toString()} onValueChange={value => handleProductChange(value)}>
+                            <Select value={selectedProduct} onValueChange={value => handleProductChange(value)}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Chọn sản phẩm" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {PRODUCTS.map((product) => (
+                                    {products.map((product) => (
                                         <SelectItem key={product.id} value={product.id}>
                                             {product.name}
                                         </SelectItem>
@@ -90,7 +107,6 @@ export default function NewOrderDetailDialog({ currentOrder,isChanged, setIsChan
                                 value={quantity}
                                 onChange={(e) => {
                                     setQuantity(Number(e.target.value));
-                                    setTotal(Number(e.target.value) * Number(selectedProduct.price));
                                 }}
                                 min={1}
                                 className="col-span-3"
@@ -124,7 +140,8 @@ export default function NewOrderDetailDialog({ currentOrder,isChanged, setIsChan
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit">Thêm sản phẩm</Button>
+                        <Button type="submit" onClick={handleSave} disabled={!loading}>Thêm sản phẩm</Button>
+                        {loading ? "Đang thêm" : undefined}
                     </DialogFooter>
                 </form>
             </DialogContent>

@@ -4,7 +4,9 @@ export interface BaseReport{
     totalRevenue:string;
     totalExpenditure:string;
     topSelling: Product;
+    topSellingId:string;
     leastSelling: Product;
+    leastSellingId:string;
     numberOfFinishedOrders:Number;
     numberOfCancelledOrders:Number;
     totalProductsSold:Number;

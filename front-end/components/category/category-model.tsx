@@ -1,6 +1,6 @@
 interface Category {
     id: string;
     name: string;
-    desciprtion: string;
+    description: string;
     products? : Product[]
 }

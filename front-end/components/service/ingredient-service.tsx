@@ -2,8 +2,8 @@ import { getAccessToken } from "./token-handler";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL + '/ingredient';
 
-export const addIngredient = async (name: string, measurementUnit: string) => {
-     const token = getAccessToken("accessToken");
+export const addIngredient = async (newIngredient: any) => {
+    const token = getAccessToken("accessToken");
     try {
         const response = await fetch(`${API_URL}`, {
             method: "POST",
@@ -12,8 +12,9 @@ export const addIngredient = async (name: string, measurementUnit: string) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name: name,
-                measurementUnit: measurementUnit
+                name: newIngredient.name,
+                measurementUnit: newIngredient.measurementUnit,
+                pictureUrl: newIngredient.pictureUrl
             })
         });
 
@@ -29,7 +30,7 @@ export const addIngredient = async (name: string, measurementUnit: string) => {
 }
 
 export const getAllIngredient = async () => {
-     const token = getAccessToken("accessToken");
+    const token = getAccessToken("accessToken");
     try {
         const response = await fetch(`${API_URL}`, {
             method: "GET",
@@ -51,7 +52,7 @@ export const getAllIngredient = async () => {
 }
 
 export const editIngredient = async (id: string, name: string, measurementUnit: string) => {
-     const token = getAccessToken("accessToken");
+    const token = getAccessToken("accessToken");
     try {
         const response = await fetch(`${API_URL}/${id}`, {
             method: "PUT",

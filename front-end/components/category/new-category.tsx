@@ -6,14 +6,14 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { callWithAuth } from "../service/token-handler";
-import { editCategory } from "../service/category-service";
+import { createNewCategory, editCategory } from "../service/category-service";
 
-export default function CategoryEdit({ category, onEdit }: {
-    category: Category,
-    onEdit: (category: Category) => void
+export default function NewCategory({data, setData}:{
+    data:Category[],
+    setData:React.Dispatch<React.SetStateAction<Category[]>>
 }) {
-    const [name, setName] = useState(category.name);
-    const [description, setDescription] = useState(category.description);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
 
     const submitChange = async (event: React.FormEvent) => {
@@ -21,16 +21,16 @@ export default function CategoryEdit({ category, onEdit }: {
         setLoading(true);
 
         try {
-            const result = await callWithAuth(await editCategory(category.id, name, description));
+            const result = await callWithAuth(await createNewCategory(name, description));
             if (result) {
-                toast.success("Chỉnh sửa thành công");
-                onEdit(result);
+                toast.success("Thêm thành công");
+                setData([...data, result]);
             } else {
                 toast.error("Có lỗi xảy ra, vui lòng thử lại!");
             }
         } catch (error) {
-            console.error("Lỗi khi chỉnh sửa danh mục:", error);
-            toast.error("Không thể chỉnh sửa danh mục");
+            console.error("Lỗi khi Thêm danh mục:", error);
+            toast.error("Không thể Thêm danh mục");
         }
 
         setLoading(false);
@@ -44,9 +44,9 @@ export default function CategoryEdit({ category, onEdit }: {
             <DialogContent className="sm:max-w-[425px]">
                 <form onSubmit={submitChange}>
                     <DialogHeader>
-                        <DialogTitle>Chỉnh sửa</DialogTitle>
+                        <DialogTitle>Danh mục mới</DialogTitle>
                         <DialogDescription>
-                            Chỉnh sửa thông tin danh mục
+                            Điền thông tin của danh mục mới
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
@@ -76,8 +76,8 @@ export default function CategoryEdit({ category, onEdit }: {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit" disabled={loading}>Lưu thay đổi</Button>
-                        {loading ? "Đang lưu..." : "Lưu thay đổi"}
+                        <Button type="submit" disabled={loading}>Thêm</Button>
+                        {loading ? "Đang tạo danh mục..." : ""}
                     </DialogFooter>
                 </form>
             </DialogContent>

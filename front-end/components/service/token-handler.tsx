@@ -50,3 +50,13 @@ export const checkRole = () => {
         return null;
     return decoded;
 }
+
+export const getHeaderProfile = () =>{
+    const token = getAccessToken("accessToken");
+    if (!token)
+        return null;
+    const decoded = jwt.decode(token) as { realName: string, role: string,email:string,profilePicture:string } | null;
+    if(!decoded)
+        return null;
+    return decoded;
+}

@@ -40,11 +40,21 @@ const fetchIngredients = async () => {
         setFilterData(data);
     }
 
+    const onEdit = (updatedIngredient: Ingredient) => {
+        setData(prev => {
+            const exists = prev.some(i => i.id === updatedIngredient.id);
+            return exists 
+                ? prev.map(i => (i.id === updatedIngredient.id ? updatedIngredient : i)) 
+                : [...prev, updatedIngredient];
+        });
+    };
+
+
     const columns = getIngredientColumns();
     return <div className="p-4 space-y-4">
         <div className="flex justify-between">
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
-           <NewIngredient/>
+           <NewIngredient onEdit={onEdit} />
         </div>
         <DataTable columns={columns} data={filterData} onDelete={onDelete} />
     </div>

@@ -1,38 +1,60 @@
-
+"use client"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { toast } from "sonner";
-import { PRODUCTS } from "./constants";
+import { callWithAuth } from "../service/token-handler";
+import { getAllCategory } from "../service/category-service";
+import { editProduct } from "../service/product-service";
 
-export default function ProductEdit({ product }: { product: Product }) {
+export default function ProductEdit({ product, onEdit }: { product: Product, onEdit: (updatedProduct: Product) => void }) {
     const [name, setName] = useState(product.name);
     const [price, setPrice] = useState(product.price);
     const [img, setImg] = useState(product.img);
-    const [category, setCategory] = useState(product.category);
-    const [categories,setCategories] = useState<Category[]>([]);
+    const [categoryId, setCategoryId] = useState(product.categoryId);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    const handleCategoryChange = (value: string) => {
-        const newCategory = categories.findLast(c => c.id === value);
-        if (newCategory)
-            setCategory(newCategory);
+    const fetchCategories = async () => {
+        const result = await callWithAuth(getAllCategory);
+        if (result)
+            setCategories(result);
     }
 
-    const submitChange = () => {
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const handleCategoryChange = (value: string) => {
+        setCategoryId(value);
+    }
+
+    const submitChange = async (event: React.FormEvent) => {
+        event.preventDefault();
+
         product.name = name;
         product.price = price;
-        product.img = img;
-        product.category = category;
-        const edittedProduct = { id: product.id, name: name, price: price, img: img, category: category } as Product;
-        const productIndex = PRODUCTS.findIndex(p => p.id === product.id);
-        console.log(edittedProduct)
-        if (productIndex !== -1) {
-            PRODUCTS[productIndex] = edittedProduct;
-            toast(`Chỉnh sửa thành công ${edittedProduct.name} ${edittedProduct.price}`);
+        product.img = img ? img : '';
+        product.categoryId = categoryId;
+
+        setLoading(true);
+
+        try {
+            const result = await callWithAuth(await editProduct(product));
+            if (result) {
+                toast.success("Chỉnh sửa thành công");
+                onEdit(result);
+            } else {
+                toast.error("Có lỗi xảy ra, vui lòng thử lại!");
+            }
+        } catch (error) {
+            console.error("Lỗi khi chỉnh sửa sản phẩm:", error);
+            toast.error("Lỗi khi chỉnh sửa sản phẩm");
         }
+        setLoading(false);
     }
     return (
         <Dialog>
@@ -87,7 +109,7 @@ export default function ProductEdit({ product }: { product: Product }) {
                             <Label htmlFor="idCategory" className="block text-sm font-medium text-gray-700">
                                 Danh mục sản phẩm
                             </Label>
-                            <Select value={category?.id} onValueChange={handleCategoryChange}>
+                            <Select value={categoryId} onValueChange={handleCategoryChange}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Chọn danh mục" />
                                 </SelectTrigger>
@@ -104,6 +126,7 @@ export default function ProductEdit({ product }: { product: Product }) {
                     </div>
                     <DialogFooter>
                         <Button type="submit">Lưu thay đổi</Button>
+                        {loading ? "Đang lưu..." : "Lưu thay đổi"}
                     </DialogFooter>
                 </form>
             </DialogContent>

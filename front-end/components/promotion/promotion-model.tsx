@@ -1,3 +1,4 @@
+import { PromotionSchedule } from "./schedule-model";
 
 
 export interface Promotion {
@@ -6,4 +7,5 @@ export interface Promotion {
     description: string;
     value: number;
     isActive: boolean;
+    schedules:PromotionSchedule[]
 }

@@ -34,8 +34,12 @@ export default function ProductBody() {
     const onDelete = (idRow:string)=>{
 
     }
-
-    const columns = getProductColumns({ onDelete });
+    const onEdit = (updatedProduct: Product) => {
+        setData(prev =>
+            prev.map(cat => (cat.id === updatedProduct.id ? updatedProduct : cat))
+        );
+    };
+    const columns = getProductColumns({onEdit});
     return <div className="p-4 space-y-4">
         <div className="flex justify-between">
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />

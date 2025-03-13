@@ -1,42 +1,50 @@
 "use client"
-import { useState } from "react"
+import React, { FormEvent, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { PROMOTIONS } from "./promotion-constants"
 import { toast } from "sonner"
+import { callWithAuth } from "../service/token-handler"
+import { createPromotion } from "../service/promotion-service"
+import { Promotion } from "./promotion-model"
 
-export default function NewPromotion() {
+export default function NewPromotion({ onNewPromotion }: {
+    onNewPromotion: (newPromo: Promotion) => void
+}) {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
-    const [discount, setDiscount] = useState("")
-    const [open, setOpen] = useState(false)
+    const [discount, setDiscount] = useState("");
+    const [isOpen, setIsOpen] = useState(true);
 
-    const handleSave = () => {
-        if (!name || !discount) return
+    const handleSave = async (e: FormEvent) => {
+        e.preventDefault();
+        if (!name || !discount || !description) {
+            toast.warning("Không được bỏ trống các thông tin")
+            return;
+        }
 
         const newPromotion = {
-            id: (PROMOTIONS.length + 1).toString(),
-            name,
-            description,
-            value: parseFloat(discount),
+            name: name,
+            description: description,
+            value: parseInt(discount),
             isActive: false
         }
-
-        PROMOTIONS.push(newPromotion)
-        setOpen(false) 
-        toast("Thêm khuyến mãi thành công",{
-            description:"Đã thêm thành công khuyến mãi mới"
+        const result = await callWithAuth(await createPromotion(newPromotion));
+        if (!result.error) {
+            onNewPromotion(result);
+            toast("Thêm khuyến mãi thành công", {
+                description: "Đã thêm thành công khuyến mãi mới"
+            });
+            setName("")
+            setDescription("")
+            setDiscount("")
+            setIsOpen(false);
         }
-        )
-        setName("")
-        setDescription("")
-        setDiscount("")
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog defaultOpen={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button className="text-white">Thêm khuyến mãi</Button>
             </DialogTrigger>
@@ -55,17 +63,17 @@ export default function NewPromotion() {
                     </div>
                     <div>
                         <Label>Chiết khấu (%)</Label>
-                        <Input 
-                            type="number" 
-                            min="0" max="100" 
-                            value={discount} 
-                            onChange={(e) => setDiscount(e.target.value)} 
+                        <Input
+                            type="number"
+                            min="0" max="100"
+                            value={discount}
+                            onChange={(e) => setDiscount(e.target.value)}
                         />
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setOpen(false)}>Hủy</Button>
-                    <Button onClick={handleSave}>Lưu</Button>
+                    <Button variant="outline" onClick={() => setIsOpen(false)}>Hủy</Button>
+                    <Button type="submit" onClick={handleSave}>Lưu</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

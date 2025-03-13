@@ -6,7 +6,7 @@ import Link from "next/link"
 export default function ItemList({ data }: { data: Order[] }) {
     return (
         <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 shadow-sm ">
-            {data.length === 0 &&<><div></div><h2 className="text-2xl font-bold mx-auto text-red-600">Không có dữ liệu nào</h2></>}
+            {data.length === 0 && <><div></div><h2 className="text-2xl font-bold mx-auto text-red-600">Không có dữ liệu nào</h2></>}
             {data.map(item => {
                 return <li key={item.id} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-gray-50 shadow hover:shadow-lg hover:scale-105 transition-transform duration-200">
                     <div className="flex w-full items-center justify-between space-x-6 p-6">
@@ -25,10 +25,10 @@ export default function ItemList({ data }: { data: Order[] }) {
                                     }
                                 })()}`}>{OrderStatus[item.orderStatus]} Order</h3>
                                 <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium ring-1 ring-inset ring-green-600/20">
-                                Mã: {item.id}</span>
+                                    Mã: {item.id}</span>
                             </div>
                             <span className="mt-1 truncate text-sm text-gray-500">
-                                Khách hàng:{' '}
+                                Khách hàng:{item.customerId ? 'Khách quen' : 'Khách vãng lai'}
                             </span>
                             <p className="truncate text-sm font-bold">
                                 Tại quầy

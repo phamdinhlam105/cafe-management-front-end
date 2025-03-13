@@ -1,11 +1,14 @@
 "use client"
 
 import { PRODUCTS } from "@/components/product/constants";
+import { getAllCategory } from "@/components/service/category-service";
+import { addProduct } from "@/components/service/product-service";
+import { callWithAuth } from "@/components/service/token-handler";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 
@@ -14,44 +17,50 @@ export default function NewProductBody() {
     const [price, setPrice] = useState("");
     const [idCategory, setIdCategory] = useState("");
     const [img, setImg] = useState('');
-    const [categories,setCategories] = useState<Category[]>([]);
-    const [newProduct, setNewProduct] = useState<Product>(
-        {
-            id: '',
-            name: '',
-            price: '',
-            img: '',
-            category: null
-        });
+    const [categories, setCategories] = useState<Category[]>([]);
 
+
+
+    const fetchCategories = async () => {
+        const result = await callWithAuth(getAllCategory);
+        if (result)
+            setCategories(result);
+    }
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
     const handleCategoryChange = (value: string) => {
         setIdCategory(value);
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         if (!name || !price || !idCategory) {
             alert('Hãy điền đầy đủ thông tin sản phẩm');
             return;
         }
-        const chosenCategory = categories.findLast(c => c.id === idCategory);
 
         const newProductData = {
-            id: (PRODUCTS.length + 1).toString(),
-            name:name,
-            price:price,
-            img:img,
-            category: chosenCategory ? chosenCategory : null
-        } as Product;
-        
-        PRODUCTS.push(newProductData);
-        toast("Thêm sản phẩm thành công", {
-            description: `Sản phẩm ${name} đã được thêm thành công`
-        });
-        setName("");
-        setPrice("");
-        setIdCategory("");
+            name: name,
+            price: price,
+            img: img ? img : '',
+            categoryId: idCategory
+        };
+        const fetchNewProduct = await callWithAuth(await addProduct(newProductData));
+        if (fetchNewProduct) {
+            toast("Thêm sản phẩm thành công", {
+                description: `Sản phẩm ${name} đã được thêm thành công`
+            });
+            setName("");
+            setPrice("");
+            setIdCategory("");
+        }
+        else
+            toast("Thêm sản phẩm thất bại", {
+                description: `Không thể thêm sản phẩm. Vui lòng thử lại sau`
+            });
     };
 
     return (

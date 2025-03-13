@@ -91,3 +91,26 @@ export const updateStock = async (updatedStock: any) => {
         return { error: "Không thể kết nối đến server!" };
     }
 }
+
+
+export const getTodayStock = async () => {
+    const token = getAccessToken("accessToken");
+    try {
+        const response = await fetch(`${API_URL}/today`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            return data;
+        }
+        else
+            return { error: "Dữ liệu không hợp lệ" }
+    } catch (error) {
+        return { error: "Không thể kết nối đến server!" };
+    }
+}

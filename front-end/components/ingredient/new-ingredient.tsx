@@ -1,33 +1,51 @@
 "use client"
 
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
-import { INGREDIENTS } from "./ingredient-constants"
 import { Input } from "../ui/input"
-export default function NewIngredient() {
+import { Ingredient } from "./ingredient-model"
+import { toast } from "sonner"
+import { callWithAuth } from "../service/token-handler"
+import { addIngredient } from "../service/ingredient-service"
+export default function NewIngredient({ onEdit }: { onEdit: (updatedIngredient: Ingredient) => void }) {
     const [name, setName] = useState("")
     const [measurement, setMeasurement] = useState("")
-    const [open, setOpen] = useState(false)
-
-    const handleSave = () => {
-            if (!name || !measurement) return
-    
-            const newIngredient = {
-                id: (INGREDIENTS.length + 1).toString(),
-                name,
-                measurementUnit:measurement
-            }
-    
-            INGREDIENTS.push(newIngredient)
-            setOpen(false) 
-            setName("")
-            setMeasurement("")
+    const [pictureUrl, setPictureUrl] = useState("");
+    const [loading,setLoading] = useState(false);
+    const handleSave = async (event: FormEvent) => {
+        event.preventDefault();
+        setLoading(true);
+        if (!name || !measurement){
+            toast("Vui lòng điền đủ thông tin bắt buộc",{
+                description:"Hãy điền đầy đủ tên và đơn vị đo lường"
+            })
+            return;
         }
-    
 
-    return <Dialog open={open} onOpenChange={setOpen}>
+        const newIngredient = {
+            name:name,
+            measurementUnit: measurement,
+            pictureUrl:pictureUrl?pictureUrl:""
+        }
+
+        const result = await callWithAuth(await addIngredient(newIngredient));
+        if(result){
+            onEdit(result);
+            toast("Thêm nguyên liệu thành công");
+            setName("");
+            setMeasurement("");
+            setPictureUrl("");
+        }
+
+        else
+            toast("Thêm nguyên liệu thất bại");
+        setLoading(false);
+    }
+
+
+    return <Dialog >
         <DialogTrigger asChild>
             <Button className="text-white">Thêm nguyên liệu</Button>
         </DialogTrigger>
@@ -44,11 +62,16 @@ export default function NewIngredient() {
                     <Label>Đơn vị tính</Label>
                     <Input value={measurement} onChange={(e) => setMeasurement(e.target.value)} />
                 </div>
-                
+                <div>
+                    <Label>Ảnh</Label>
+                    <Input value={pictureUrl} onChange={(e) => setPictureUrl(e.target.value)} />
+                </div>
+                {pictureUrl ? <img src={pictureUrl} /> : "Không có ảnh"}
             </div>
             <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>Hủy</Button>
-                <Button onClick={handleSave}>Lưu</Button>
+                <Button disabled={!loading} variant="outline" type="submit">Hủy</Button>
+                <Button disabled={!loading} type="submit" onClick={handleSave}>Lưu</Button>
+                {loading?"Đang thêm dữ liệu":undefined}
             </DialogFooter>
         </DialogContent>
     </Dialog>

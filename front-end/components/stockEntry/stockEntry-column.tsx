@@ -5,11 +5,11 @@ import SelectHeader from "@/components/table/select-header";
 import { ColumnDef } from "@tanstack/react-table";
 import { StockEntryDetail } from "../stockEntryDetail/stockEntryDetail-model";
 import { Input } from "../ui/input";
-import { useState } from "react";
-import { STOCK_DETAILS } from "../stockDetail/stockDetail-constants";
+import { StockDetail } from "../stockDetail/stockDetail-model";
 
 export const getStockEntryColumn = (
-    setData: React.Dispatch<React.SetStateAction<StockEntryDetail[]>>
+    setData: React.Dispatch<React.SetStateAction<StockEntryDetail[]>>,
+    toDayStock: StockDetail[]
 ): ColumnDef<StockEntryDetail>[] => [
         {
             id: "select",
@@ -77,11 +77,8 @@ export const getStockEntryColumn = (
             accessorKey: "remain",
             header: ({ column }) => <ColumnHeader column={column} title="Tồn kho" />,
             cell: ({ row }) => {
-                const stockDetail = STOCK_DETAILS.find(
-                    (detail) => detail.ingredient.id === row.original.ingredient.id
-                );
-        
-                return <div className="text-md text-gray-400">{stockDetail?.stockRemain ?? 0}</div>;
+                const detail = toDayStock.findLast((d) => d.ingredient.id === row.original.ingredient.id);
+                return <div className="text-md text-gray-400">{detail ? detail.stockRemain : 0}</div>;
             },
         },
         {

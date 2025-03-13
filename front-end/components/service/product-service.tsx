@@ -68,7 +68,7 @@ export const getProductById = async (id: string) => {
     }
 }
 
-export const addProduct = async (name: string, price: string, pictureUrl: string, idCategory: string) => {
+export const addProduct = async (product:any) => {
         const token = getAccessToken("accessToken");
     try {
         const response = await fetch(`${API_URL}`, {
@@ -78,10 +78,10 @@ export const addProduct = async (name: string, price: string, pictureUrl: string
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name: name,
-                price: price,
-                idCategory: idCategory,
-                pictureUrl: pictureUrl
+                name: product.name,
+                price: product.price,
+                categoryId: product.idCategory,
+                img: product.img
             })
         });
 
@@ -96,20 +96,20 @@ export const addProduct = async (name: string, price: string, pictureUrl: string
     }
 }
 
-export const editProduct = async (id: string, name: string, price: string, pictureUrl: string, idCategory: string) => {
+export const editProduct = async (product:any) => {
         const token = getAccessToken("accessToken");
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${API_URL}/${product.id}`, {
             method: "PUT",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name: name,
-                price: price,
-                idCategory: idCategory,
-                pictureUrl: pictureUrl
+                name: product.name,
+                price: product.price,
+                categoryId: product.categoryId,
+                img: product.pictureUrl
             })
         });
 

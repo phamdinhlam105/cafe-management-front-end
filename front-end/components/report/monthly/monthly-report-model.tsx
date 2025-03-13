@@ -6,8 +6,6 @@ export interface MonthlyReport extends BaseReport{
     startDate:string;
     endDate:string;
     bestDay:{
-        id:string;
-        reportId:string;
         weekDay:string;
         avgRevenue:string;
     }[],
