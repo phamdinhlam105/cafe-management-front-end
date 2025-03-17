@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { loginRequest } from "../service/login-service";
 import { useRouter } from "next/navigation";
+import jwt from "jsonwebtoken";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -22,16 +23,21 @@ export default function LoginForm() {
 
     try {
       const data = await loginRequest(username, password);
-      if(data.error){
+      if (data.error) {
         setError(data.error);
       }
-      
-      else{
-        alert(`Xin chào ${data.userName}!`);
+      else {
+        const decoded = jwt.decode(data.accessToken) as { role: string };
 
+        if (decoded.role === "Khách") {
+          alert("Hãy liên hệ quản lý để được cấp quyền!");
+          return;
+
+        alert(`Xin chào ${data.userName}!`);
       }
-      router.push('/order')
-    } catch (err:any) {
+    }
+      router.push('/order');
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);

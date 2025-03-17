@@ -5,7 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL + '/account';
 
 export const registerRequest = async (registerReq: any) => {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -13,7 +13,7 @@ export const registerRequest = async (registerReq: any) => {
       body: JSON.stringify(registerReq),
     });
 
-    if (response.status === 200) {
+    if (response.ok) {
       const data = await response.json();
       return data;
     }
@@ -34,7 +34,7 @@ export const setRoleRequest = async (idUser: string, roleId: string) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        idUser: idUser,
+        userId: idUser,
         roleId: roleId
       }),
     });

@@ -14,12 +14,13 @@ import { callWithAuth } from "../service/token-handler";
 import { getAllRoles } from "../service/account-service";
 
 export default function SetRoleButton({ currentRole, idUser, onChange }: {
-    currentRole: string,
+    currentRole: { id: string, roleName: string },
     idUser: string,
     onChange: (idUser: string, idRole: string) => void
 }) {
     const [allRole, setAllRole] = useState<{ id: string, roleName: string }[]>([]);
-    const [chosenRole, setChosenRole] = useState(currentRole)
+    const [chosenRole, setChosenRole] = useState<{ id: string, roleName: string }>(currentRole)
+
     const fetchAllRole = async () => {
         const result = await callWithAuth(getAllRoles);
         if (!result.error)
@@ -28,19 +29,23 @@ export default function SetRoleButton({ currentRole, idUser, onChange }: {
 
     useEffect(() => {
         fetchAllRole();
+        console.log(currentRole)
     }, []);
+    useEffect(() => {
+        setChosenRole(currentRole);
+    }, [allRole])
 
     const handleRoleChange = (value: string) => {
         if (!value)
             return;
-        setChosenRole(value);
+        setChosenRole({ id: value, roleName: allRole.findLast(r => r.id === value)?.roleName || "" });
         onChange(idUser, value);
     }
 
     return <div>
         <Select onValueChange={handleRoleChange}>
             <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Chọn vai trò" />
+                <SelectValue placeholder={chosenRole.roleName} defaultValue={currentRole.id} />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>

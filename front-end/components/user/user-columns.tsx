@@ -8,7 +8,7 @@ import SetRoleButton from "./setrole-button";
 
 export const getUserCollumns = (
     setData: React.Dispatch<React.SetStateAction<User[]>>,
-    roleChange: (idUser:string,idRole:string)=>void
+    roleChange: (idUser: string, idRole: string) => void
 ): ColumnDef<User>[] => [
         {
             id: "select",
@@ -36,12 +36,18 @@ export const getUserCollumns = (
         {
             accessorKey: "setrole",
             header: ({ column }) => <ColumnHeader column={column} title="Thay đổi vai trò" />,
-            cell: ({ row }) =><div className="text-md text-gray-400">
-                <SetRoleButton 
-                idUser={row.original.id}
-                currentRole={row.original.role}
-                onChange={roleChange}/>
+            cell: ({ row }) => {
+              const currentRole = {
+                id: row.original.role,
+                roleName: row.original.roleName,
+              };
+          
+              return (
+                <div className="text-md text-gray-400">
+                  <SetRoleButton idUser={row.original.id} currentRole={currentRole} onChange={roleChange} />
                 </div>
-        },
-      
+              );
+            },
+          }
+
     ]
