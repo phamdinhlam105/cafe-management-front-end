@@ -1,6 +1,7 @@
+import { NEXT_PUBLIC_API_URL } from "./api-link";
 import { getAccessToken } from "./token-handler";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + '/report';
+const API_URL = NEXT_PUBLIC_API_URL + '/report';
 
 export const getDailyReport = async (date: Date) => {
     const formattedDate = date.toISOString().split('T')[0];

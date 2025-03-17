@@ -1,6 +1,7 @@
+import { NEXT_PUBLIC_API_URL } from "./api-link";
 import { getAccessToken } from "./token-handler";
 
-const API_ORDER = process.env.NEXT_PUBLIC_API_URL + '/neworder';
+const API_ORDER = NEXT_PUBLIC_API_URL + '/neworder';
 
 export const getAllOrder = async () => {
     const token = getAccessToken("accessToken");

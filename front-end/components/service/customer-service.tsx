@@ -1,6 +1,7 @@
+import { NEXT_PUBLIC_API_URL } from "./api-link";
 import { getAccessToken } from "./token-handler";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + '/customer';
+const API_URL = NEXT_PUBLIC_API_URL + '/customer';
 
 export const addCustomerService = async (newCustomer: any) => {
     const token = getAccessToken("accessToken");

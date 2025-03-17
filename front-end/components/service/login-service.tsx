@@ -1,6 +1,7 @@
+import { NEXT_PUBLIC_API_URL } from "./api-link";
 import { setAccessToken } from "./token-handler";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + '/login';
+const API_URL = NEXT_PUBLIC_API_URL + '/login';
 
 export const loginRequest = async (username:string, password:string) => {
   try {

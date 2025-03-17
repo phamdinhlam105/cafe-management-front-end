@@ -1,6 +1,7 @@
+import { NEXT_PUBLIC_API_URL } from "./api-link";
 import { getAccessToken } from "./token-handler";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + '/stockentry';
+const API_URL = NEXT_PUBLIC_API_URL + '/stockentry';
 
 export const importStock = async (stockEntry: any) => {
     const token = getAccessToken("accessToken");

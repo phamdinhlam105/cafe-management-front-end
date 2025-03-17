@@ -1,6 +1,7 @@
+import { NEXT_PUBLIC_API_URL } from "./api-link";
 import { getAccessToken } from "./token-handler";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + '/profile';
+const API_URL = NEXT_PUBLIC_API_URL + '/profile';
 
 export const getProfile = async () => {
   const token = getAccessToken("accessToken");
