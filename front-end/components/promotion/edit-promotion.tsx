@@ -38,17 +38,17 @@ export default function EditPromotion({ currentPromotion,onEdit }: { currentProm
             setIsOpen(!isOpen);
         }
         else
-            toast.error("Thêm khuyến mãi thất bại, hãy thử lại sau")
+            toast.error("Chỉnh sửa khuyến mãi thất bại, hãy thử lại sau")
     }
 
     return (
         <Dialog defaultOpen={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button className="text-white">Thêm khuyến mãi</Button>
+                <Button className="text-white">Chỉnh sửa khuyến mãi</Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Thêm mới khuyến mãi</DialogTitle>
+                    <DialogTitle>Chỉnh sửa khuyến mãi</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                     <div>
