@@ -15,7 +15,7 @@ export default function NewPromotion({ onNewPromotion }: {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [discount, setDiscount] = useState("");
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleSave = async (e: FormEvent) => {
         e.preventDefault();
@@ -27,10 +27,10 @@ export default function NewPromotion({ onNewPromotion }: {
         const newPromotion = {
             name: name,
             description: description,
-            value: parseInt(discount),
-            isActive: false
+            isActive: 0,
+            discount: parseInt(discount)
         }
-        const result = await callWithAuth(await createPromotion(newPromotion));
+        const result = await callWithAuth(() => createPromotion(newPromotion));
         if (!result.error) {
             onNewPromotion(result);
             toast("Thêm khuyến mãi thành công", {
@@ -39,8 +39,10 @@ export default function NewPromotion({ onNewPromotion }: {
             setName("")
             setDescription("")
             setDiscount("")
-            setIsOpen(false);
+            setIsOpen(!isOpen);
         }
+        else
+            toast.error("Thêm khuyến mãi thất bại, hãy thử lại sau")
     }
 
     return (

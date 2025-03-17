@@ -17,11 +17,11 @@ export default function CategoryEdit({ category, onEdit }: {
     const [loading, setLoading] = useState(false);
 
     const submitChange = async (event: React.FormEvent) => {
-        event.preventDefault(); // Ngăn form reload trang
+        event.preventDefault(); 
         setLoading(true);
 
         try {
-            const result = await callWithAuth(await editCategory(category.id, name, description));
+            const result = await callWithAuth(() => editCategory(category.id, name, description));
             if (result) {
                 toast.success("Chỉnh sửa thành công");
                 onEdit(result);

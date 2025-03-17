@@ -6,12 +6,13 @@ import {
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
-import React, { SetStateAction, useState } from "react"
+import React, { SetStateAction, useEffect, useState } from "react"
 import { DatePicker } from "../date-picker"
 import { toast } from "sonner"
 import { Promotion } from "./promotion-model"
 import { callWithAuth } from "../service/token-handler"
 import { addSchedule } from "../service/promotion-service"
+import { formatDate } from "../helper/date-to-string"
 
 
 export default function NewPromotionSchedule({ chosenPromotion, setIschanged }: {
@@ -24,6 +25,8 @@ export default function NewPromotionSchedule({ chosenPromotion, setIschanged }: 
     const [note, setNote] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
+
+ 
     const handleSave = async () => {
 
         if (!startDate || !endDate) {
@@ -47,14 +50,14 @@ export default function NewPromotionSchedule({ chosenPromotion, setIschanged }: 
         }
 
         const newSchedule = {
-            promotionId: chosenPromotion.id,
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate),
             note: note,
+            promotionId:chosenPromotion.id
         };
-        const result = await callWithAuth(await addSchedule(newSchedule));
+        const result = await callWithAuth(() => addSchedule(newSchedule));
         if (!result.error) {
-            setIschanged(prev=>!prev);
+            setIschanged(prev => !prev);
             setIsOpen(false);
             toast.success("Tạo lịch trình thành công", {
                 description: `Tạo lịch trình cho ${note} thành công`,

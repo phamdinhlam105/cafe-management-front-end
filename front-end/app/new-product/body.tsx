@@ -1,6 +1,5 @@
 "use client"
 
-import { PRODUCTS } from "@/components/product/constants";
 import { getAllCategory } from "@/components/service/category-service";
 import { addProduct } from "@/components/service/product-service";
 import { callWithAuth } from "@/components/service/token-handler";
@@ -45,11 +44,11 @@ export default function NewProductBody() {
         const newProductData = {
             name: name,
             price: price,
-            img: img ? img : '',
+            img: img ? img : null,
             categoryId: idCategory
         };
-        const fetchNewProduct = await callWithAuth(await addProduct(newProductData));
-        if (fetchNewProduct) {
+        const result = await callWithAuth(() => addProduct(newProductData));
+        if (!result.error) {
             toast("Thêm sản phẩm thành công", {
                 description: `Sản phẩm ${name} đã được thêm thành công`
             });

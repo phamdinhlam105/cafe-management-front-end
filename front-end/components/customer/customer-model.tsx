@@ -1,7 +1,7 @@
 
-interface Customer{
-    id:string;
-    name:string;
-    phone:string;
-    
+export interface Customer {
+    id: string;
+    name: string;
+    phone?: string;
+    address?: string;
 }

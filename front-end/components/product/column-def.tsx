@@ -4,9 +4,24 @@ import SelectCell from "@/components/table/select-cell";
 import SelectHeader from "@/components/table/select-header";
 import { ColumnDef } from "@tanstack/react-table";
 import ProductEdit from "./product-edit";
-import { Button } from "../ui/button";
-import { PRODUCTS } from "./constants";
+import { useEffect, useState } from "react";
+import { callWithAuth } from "../service/token-handler";
+import { getCategoryById } from "../service/category-service";
 
+const CategoryCell = ({ idCategory }: { idCategory: string }) => {
+    const [category, setCategory] = useState<Category>();
+    const fetchCategory = async () => {
+        const result = await callWithAuth(() => getCategoryById(idCategory));
+        if (!result.error)
+            setCategory(result);
+        return null
+    }
+
+    useEffect(() => {
+        fetchCategory();
+    }, []);
+    return <div className="text-md text-gray-400">{category ? category.name : "Đang tải"}</div>;
+}
 
 export const getProductColumns = ({ onEdit }: {
     onEdit: (updatedProduct: Product) => void
@@ -20,13 +35,13 @@ export const getProductColumns = ({ onEdit }: {
         {
             accessorKey: "name",
             header: ({ column }) => <ColumnHeader column={column} title="Tên sản phẩm" />,
-            cell: ({ row }) => <div className="text-normal">{row.getValue("name")}</div>
+            cell: ({ row }) => <div className="text-normal">{row.original.name}</div>
         },
 
         {
             accessorKey: "price",
             header: ({ column }) => <ColumnHeader column={column} title="Giá bán" />,
-            cell: ({ row }) => <div className="text-md text-gray-400">{row.getValue("price")}</div>
+            cell: ({ row }) => <div className="text-md text-gray-400">{parseInt(row.original.price).toLocaleString()}</div>
         },
         {
             accessorKey: 'img',
@@ -41,11 +56,8 @@ export const getProductColumns = ({ onEdit }: {
         {
             accessorKey: "category",
             header: ({ column }) => <ColumnHeader column={column} title="Loại sản phẩm" />,
-            cell: ({ row }) => {
-                const category = row.original.category as Category;
-                return <div className="text-md text-gray-400">{category.name}</div>;
-            }
-        },
+            cell: ({ row }) =>  <div className="text-md text-gray-400">{row.original.categoryName}</div>
+        },  
         {
             id: "actions",
             header: () => <div className="text-sm">Hành động</div>,

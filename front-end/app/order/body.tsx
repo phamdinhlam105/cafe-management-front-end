@@ -22,8 +22,12 @@ export default function OrderBody() {
     };
     useEffect(() => {
         fetchOrders();
-        setDisplayData(data);
+
     }, []);
+
+    useEffect(() => {
+        setDisplayData(data);
+    }, [data])
 
     const filterData = (status: string) => {
         if (status === "all") {
@@ -31,13 +35,13 @@ export default function OrderBody() {
         } else
             switch (status) {
                 case '0':
-                    setDisplayData(data.filter(order => order.orderStatus === OrderStatus.New));
+                    setDisplayData(data.filter(order => order.status === OrderStatus.New));
                     break;
                 case '1':
-                    setDisplayData(data.filter(order => order.orderStatus === OrderStatus.Completed));
+                    setDisplayData(data.filter(order => order.status === OrderStatus.Completed));
                     break;
                 case '2':
-                    setDisplayData(data.filter(order => order.orderStatus === OrderStatus.Cancelled));
+                    setDisplayData(data.filter(order => order.status === OrderStatus.Cancelled));
                     break;
                 default:
                     break;

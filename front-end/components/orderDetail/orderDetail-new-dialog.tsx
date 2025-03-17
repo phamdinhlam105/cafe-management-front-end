@@ -11,12 +11,11 @@ import { Order } from "../order/order-model";
 import { callWithAuth } from "../service/token-handler";
 import { getAllProduct } from "../service/product-service";
 import { addOrderDetail } from "../service/order-detail-service";
-import { OrderDetail } from "./orderDetail-model";
 
 
 export default function NewOrderDetailDialog({ currentOrder, onEdit }: {
     currentOrder: Order,
-    onEdit: (updatedOrderDetail: OrderDetail) => void
+    onEdit: () => void
 }) {
     const [selectedProduct, setSelectedProduct] = useState('');
     const [quantity, setQuantity] = useState(1);
@@ -26,24 +25,25 @@ export default function NewOrderDetailDialog({ currentOrder, onEdit }: {
     const [loading, setLoading] = useState(false);
 
     const fetchProducts = async () => {
-        const result = await callWithAuth(await getAllProduct);
-        if (result) {
+        const result = await callWithAuth(getAllProduct);
+        if (!result.error) {
             setProducts(result);
-            setSelectedProduct(products[0].id);
         }
     }
     useEffect(() => {
         fetchProducts();
-    })
+    }, [])
+    useEffect(() => {
+        if (products.length>0)
+            setSelectedProduct(products[0].id);
+    }, [products])
 
     const handleProductChange = (id: string) => {
         setSelectedProduct(id);
     }
 
     useEffect(() => {
-        setTotal(() => {
-            return (Number(products.findLast(p => p.id === selectedProduct)?.price) * quantity).toString();
-        })
+        setTotal(() => (Number(products.findLast(p => p.id === selectedProduct)?.price) * quantity).toLocaleString())
     }, [quantity, selectedProduct])
 
     const handleSave = async (e: React.FormEvent) => {
@@ -55,13 +55,14 @@ export default function NewOrderDetailDialog({ currentOrder, onEdit }: {
             note: note ? note : '',
             productId: selectedProduct
         };
-        const result = await callWithAuth(await addOrderDetail(newOrderDetail));
-        if (result) {
-            onEdit(result)
+        const result = await callWithAuth(() => addOrderDetail(newOrderDetail));
+        if (!result.error) {
+            onEdit;
             toast("Sản phẩm đã được thêm");
         }
         else {
-            toast("Thêm sản phẩm thất bại");
+            console.log(currentOrder)
+            toast("Thêm sản phẩm thất bại ");
         }
         setLoading(false);
     };
@@ -88,11 +89,11 @@ export default function NewOrderDetailDialog({ currentOrder, onEdit }: {
                                     <SelectValue placeholder="Chọn sản phẩm" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {products.map((product) => (
+                                    {products ? products.map((product) => (
                                         <SelectItem key={product.id} value={product.id}>
                                             {product.name}
                                         </SelectItem>
-                                    ))}
+                                    )) : "Đang load dữ liệu"}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -140,7 +141,7 @@ export default function NewOrderDetailDialog({ currentOrder, onEdit }: {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit" onClick={handleSave} disabled={!loading}>Thêm sản phẩm</Button>
+                        <Button type="submit" onClick={handleSave} disabled={loading}>Thêm sản phẩm</Button>
                         {loading ? "Đang thêm" : undefined}
                     </DialogFooter>
                 </form>

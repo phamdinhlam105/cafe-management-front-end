@@ -1,7 +1,6 @@
 "use client"
 
 import { getIngredientColumns } from "@/components/ingredient/ingredient-columns";
-import { INGREDIENTS } from "@/components/ingredient/ingredient-constants";
 import { Ingredient } from "@/components/ingredient/ingredient-model";
 import NewIngredient from "@/components/ingredient/new-ingredient";
 import SearchButton from "@/components/item-list/search-button";
@@ -25,11 +24,14 @@ const fetchIngredients = async () => {
     };
     useEffect(() => {
         fetchIngredients();
-        setFilterData(data);
     }, []);
 
+    useEffect(()=>{
+        setFilterData(data);
+    },[data])
+
     const onDelete = (index: string) => {
-        INGREDIENTS.slice(Number(index), Number(index) + 1);
+       
         toast("item deleted");
     }
 
@@ -42,7 +44,7 @@ const fetchIngredients = async () => {
 
     const onEdit = (updatedIngredient: Ingredient) => {
         setData(prev => {
-            const exists = prev.some(i => i.id === updatedIngredient.id);
+            const exists = prev.findLast(i => i.id === updatedIngredient.id);
             return exists 
                 ? prev.map(i => (i.id === updatedIngredient.id ? updatedIngredient : i)) 
                 : [...prev, updatedIngredient];

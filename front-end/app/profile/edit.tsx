@@ -10,35 +10,74 @@ import { toast } from "sonner";
 import { Profile } from "./profile-model";
 import { DatePicker } from "@/components/date-picker";
 import { getYear } from "date-fns";
+import { stringToDate } from "@/components/helper/string-to-date";
+import { callWithAuth } from "@/components/service/token-handler";
+import { editProfile } from "@/components/service/profile-service";
 
 export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profile, onProfileEdit: (newProfile: any) => void }) {
     const [name, setName] = useState(profile.name);
     const [email, setEmail] = useState(profile.email);
     const [phone, setPhone] = useState(profile.phoneNumber);
-    const [birthDate, setBirthDate] = useState<Date>(() => {
-        return profile.birthday ? new Date(profile.birthday) : new Date();
-    });
+    const [birthDate, setBirthDate] = useState<Date>(stringToDate(profile.birthday));
     const [picture, setPicture] = useState(profile.pictureUrl);
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleSave = () => {
+    const [day, setDay] = useState("");
+    const [month, setMonth] = useState("");
+    const [year, setYear] = useState("");
 
+    const handleSave = async () => {
+        let birthDate: Date | null = null;
+        let age: number | null = null;
+
+        if (day && month && year) {
+            const d = parseInt(day, 10);
+            const m = parseInt(month, 10);
+            const y = parseInt(year, 10);
+
+            if (d >= 1 && d <= 31 && m >= 1 && m <= 12 && y < getYear(new Date())) {
+                birthDate = new Date(y, m - 1, d);
+                age = getYear(new Date()) - y;
+            } else {
+                toast.error("Ngày tháng năm không hợp lệ", {
+                    description: "Vui lòng nhập đúng ngày sinh."
+                });
+                return;
+            }
+        }
+
+        if (!email || !name)
+            toast.warning("Tên và email không được bỏ trống")
+        if (!email.trim() || !name.trim())
+            toast.warning("Tên và email không được bỏ trống")
+        
         const newProfile = {
             id: profile.id,
+            userId: profile.userId,
             name: name,
             email: email,
             phoneNumber: phone,
             joinDate: profile.joinDate,
-            birthDate: birthDate === new Date ? null : birthDate,
-            age: birthDate === new Date ? null : getYear(new Date) - getYear(birthDate),
+            birthDate: birthDate,
+            age: age,
             pictureUrl: picture
         };
-        onProfileEdit(newProfile);
-        setIsOpen(false);
-        toast("Chỉnh sửa thông tin thành công", {
-            description: "Chỉnh sửa thông tin cá nhân thành công"
+
+        const result = await callWithAuth(() => editProfile(newProfile))
+        if (!result.error) {
+            onProfileEdit(newProfile);
+            setIsOpen(false);
+            toast("Chỉnh sửa thông tin thành công", {
+                description: "Chỉnh sửa thông tin cá nhân thành công"
+            }
+            )
         }
-        )
+        else {
+            toast.error("Chỉnh sửa thông tin thất bại", {
+                description: `${result.error}`
+            })
+            return;
+        }
     };
 
     return (
@@ -51,7 +90,7 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
             <DialogContent className="p-6 space-y-4 ">
                 <DialogHeader>
                     <DialogTitle>
-                        <h2 className="text-lg font-semibold">Chỉnh sửa thông tin cá nhân</h2>
+                        <span className="text-lg font-semibold">Chỉnh sửa thông tin cá nhân</span>
                     </DialogTitle>
                 </DialogHeader>
 
@@ -70,8 +109,33 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
                         <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
                     </div>
                     <div className="flex flex-col gap-1">
-                        <Label htmlFor="birthDate">Ngày sinh</Label>
-                        <DatePicker date={birthDate} setDate={setBirthDate} />
+                        <Label>Ngày sinh</Label>
+                        <div className="flex gap-2">
+                            <Input
+                                type="number"
+                                placeholder="Ngày"
+                                value={day}
+                                min="1" max="31"
+                                onChange={(e) => setDay(e.target.value)}
+                                className="w-1/3"
+                            />
+                            <Input
+                                type="number"
+                                placeholder="Tháng"
+                                value={month}
+                                min="1" max="12"
+                                onChange={(e) => setMonth(e.target.value)}
+                                className="w-1/3"
+                            />
+                            <Input
+                                type="number"
+                                placeholder="Năm"
+                                value={year}
+                                min="1900" max={getYear(new Date()).toString()}
+                                onChange={(e) => setYear(e.target.value)}
+                                className="w-1/3"
+                            />
+                        </div>
                     </div>
                     <div className="flex flex-col gap-1">
                         <Label htmlFor="birthDate">Ảnh đại diện</Label>

@@ -3,54 +3,88 @@ import { getAccessToken } from "./token-handler";
 const API_URL = process.env.NEXT_PUBLIC_API_URL + '/account';
 
 
-export const registerRequest = async (registerReq:any) => {
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(registerReq),
-      });
-  
-      if (response.status === 200) {
-        const data = await response.json();
-        return data; 
-      }
-      return { error: "Đăng ký thất bại!" }; 
-    } catch (error) {
-      return { error: "Không thể kết nối đến server!" };
-    }
-  };
-  
+export const registerRequest = async (registerReq: any) => {
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(registerReq),
+    });
 
-  export const setRoleRequest = async (idUser:string,role:1|2|3) => {
-    const token = getAccessToken("accessToken");
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            idUser:idUser,
-            role:role
-        }),
-      });
-  
-      if (response.status === 200) {
-        const data = await response.json();
-        console.log(data)
-        if (Object.keys(data).length === 0) {
-          return { error: "Sai tài khoản hoặc mật khẩu!" };
-        }
-        return data; 
-      }
-      return { error: "Đăng nhập thất bại!" }; 
-    } catch (error) {
-      return { error: "Không thể kết nối đến server!" };
+    if (response.status === 200) {
+      const data = await response.json();
+      return data;
     }
-  };
-  
+    return { error: "Đăng ký thất bại!" };
+  } catch (error) {
+    return { error: "Không thể kết nối đến server!" };
+  }
+};
+
+
+export const setRoleRequest = async (idUser: string, roleId: string) => {
+  const token = getAccessToken("accessToken");
+  try {
+    const response = await fetch(`${API_URL}/setrole`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        idUser: idUser,
+        roleId: roleId
+      }),
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    return { error: "Không thể kết nối đến server!" };
+  }
+};
+
+export const getAllUsers = async () => {
+  const token = getAccessToken("accessToken");
+  try {
+    const response = await fetch(`${API_URL}/alluser`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    return { error: "Không thể kết nối đến server!" };
+  }
+};
+
+export const getAllRoles = async () => {
+  const token = getAccessToken("accessToken");
+  try {
+    const response = await fetch(`${API_URL}/allrole`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    return { error: "Không thể kết nối đến server!" };
+  }
+};
 

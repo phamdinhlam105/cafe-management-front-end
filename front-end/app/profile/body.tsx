@@ -1,5 +1,6 @@
+"use client"
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { PROFILE } from "./profile-contants";
 import DefaultAvatar from "@/components/profile/default-avatar";
 import { Separator } from "@/components/ui/separator";
 import ProfileEdit from "./edit";
@@ -7,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Profile } from "./profile-model";
 import { callWithAuth } from "@/components/service/token-handler";
 import { editProfile, getProfile } from "@/components/service/profile-service";
+import ChangePassword from "./change-password";
 
 export default function ProfileBody() {
 
@@ -50,7 +52,7 @@ export default function ProfileBody() {
                                 {profile?.pictureUrl ?
                                     <Avatar className="h-full">
                                         <AvatarImage
-                                            src={PROFILE.picture}
+                                            src={profile.pictureUrl}
                                             alt="avatar"
                                             className="object-cover h-32 rounded-full border border-4 border-white">
 
@@ -61,7 +63,8 @@ export default function ProfileBody() {
                             <h3 className="text-gray-50 font-bold text-2xl ml-40">{profile.name}</h3>
                             <p className="text-gray-50 text-md ml-40">{profile.email}</p>
                         </div>
-                        <div>
+                        <div className="flex space-x-2">
+                            <ChangePassword/>
                             <ProfileEdit profile={profile} onProfileEdit={onProfileEdit} />
                         </div>
                     </div>

@@ -2,14 +2,15 @@ import { OrderDetail } from "../orderDetail/orderDetail-model"
 import { OrderStatus } from "./enums"
 
 export interface Order {
-    id?: string,
+    id: string,
     no: number,
-    price: string,
-    quantity: number,
+    total: string,
+    amount: number,
     note: string,
+    customerName?:string,
     customerId?: string,
-    orderStatus: OrderStatus,
-    createAt: string,
+    status: OrderStatus,
+    createdAt: string,
     promotionId?:string,
     details?: OrderDetail[]
 }

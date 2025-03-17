@@ -35,7 +35,7 @@ export default function PromotionBody() {
 
     const fetchSchedules = async () => {
         if (chosenPromotion) {
-            const result = await callWithAuth(await getScheduleByPromotionId(chosenPromotion.id));
+            const result = await callWithAuth(()=> getScheduleByPromotionId(chosenPromotion.id));
             if (result)
                 setSchedule(result);
         }
@@ -84,6 +84,10 @@ export default function PromotionBody() {
         <div className="flex space-x-4">
             <Label className="block text-md font-medium text-gray-700">Trạng thái</Label>
             {chosenPromotion ? <div>{chosenPromotion.isActive ? 'Đang áp dụng' : 'Chưa áp dụng'}</div> : "Đang load dữ liệu"}
+        </div>
+        <div className="flex space-x-4">
+            <Label className="block text-md font-medium text-gray-700">Chiết khấu: </Label>
+            {chosenPromotion ? <div>{chosenPromotion.discount}%</div> : "Đang load dữ liệu"}
         </div>
         {chosenPromotion ? <NewPromotionSchedule chosenPromotion={chosenPromotion} setIschanged={setIschanged} /> : ''}
         <h2 className="mt-10 text-xl font-bold text-center">Lịch trình áp dụng khuyến mãi</h2>

@@ -53,7 +53,7 @@ export default function CategoryBody() {
     return <div className="p-4 pt-10 space-y-4">
         <div className="flex justify-between">
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
-            <NewCategory data={data} setData={setData} />
+            <NewCategory onEdit={onEdit} />
         </div>
         <DataTable columns={columns} data={data} onDelete={onDelete} />
     </div>

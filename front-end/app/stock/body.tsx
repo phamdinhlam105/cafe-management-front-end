@@ -17,17 +17,21 @@ export default function StockBody() {
     const [search, setSearch] = useState('');
 
     const fetchStocks = async () => {
-        const result = await callWithAuth(await getTodayStock());
+        const result = await callWithAuth(getTodayStock);
         if (result) {
             setStock(result);
-            if (result.dailyStockDetails)
-                setData(result.dailyStockDetails);
+            if (result.details)
+                setData(result.details);
         }
     };
     useEffect(() => {
         fetchStocks();
-        setFilterData(data);
+
     }, []);
+
+    useEffect(() => {
+        setFilterData(data);
+    }, [data])
 
     const handleSearchClick = () => {
         if (search)

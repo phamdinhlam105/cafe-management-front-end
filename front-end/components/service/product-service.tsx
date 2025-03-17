@@ -24,27 +24,6 @@ export const getAllProduct = async () => {
     }
 }
 
-export const getByCategoryId = async (id: string) => {
-        const token = getAccessToken("accessToken");
-    try {
-        const response = await fetch(`${API_URL}/getByCategoryId/${id}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            }
-        });
-
-        if (response.status === 200) {
-            const data = await response.json();
-            return data;
-        }
-        else
-            return { error: "Dữ liệu không hợp lệ" }
-    } catch (error) {
-        return { error: "Không thể kết nối đến server!" };
-    }
-}
 
 export const getProductById = async (id: string) => {
         const token = getAccessToken("accessToken");
@@ -77,12 +56,9 @@ export const addProduct = async (product:any) => {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                name: product.name,
-                price: product.price,
-                categoryId: product.idCategory,
-                img: product.img
-            })
+            body: JSON.stringify(
+                product
+            )
         });
 
         if (response.status === 200) {

@@ -1,8 +1,8 @@
 interface Product {
     id: string;
-    categoryId?:string;
+    categoryId:string;
     name: string;
     price : string;
     img: string | null;
-    category: Category| null;
+    categoryName: string;
 }

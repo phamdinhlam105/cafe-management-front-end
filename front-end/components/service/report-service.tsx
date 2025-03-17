@@ -26,10 +26,8 @@ export const getDailyReport = async (date: Date) => {
     }
 }
 
-export const getDailyReportByRange = async (startDate: Date,endDate:Date) => {
-    const formattedStart = startDate.toISOString().split('T')[0];
-    const formattedEnd = endDate.toISOString().split('T')[0];
-    const apiUrl = `${API_URL}/daily?startdate=${formattedStart}&endDate=${formattedEnd}`;
+export const getDailyReportByRange = async (startDate: string,endDate:string) => {
+    const apiUrl = `${API_URL}/daily/range?startdate=${startDate}&endDate=${endDate}`;
     const token = getAccessToken("accessToken");
     try {
         const response = await fetch(apiUrl, {

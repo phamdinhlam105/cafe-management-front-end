@@ -54,7 +54,7 @@ export const SidebarStructure:SidebarModel[] = [
             },
             {
                 title: "Cập nhật kho",
-                url: "#",
+                url: "/stock/update",
             },
             {
                 title: "Nguyên liệu",
@@ -129,7 +129,7 @@ export const EmployeeSidebar:SidebarModel[] = [
             },
             {
                 title: "Cập nhật kho",
-                url: "#",
+                url: "/stock/update",
             },
         ],
     },

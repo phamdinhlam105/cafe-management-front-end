@@ -20,7 +20,7 @@ export default function ProductEdit({ product, onEdit }: { product: Product, onE
 
     const fetchCategories = async () => {
         const result = await callWithAuth(getAllCategory);
-        if (result)
+        if (!result.error)
             setCategories(result);
     }
 
@@ -43,7 +43,7 @@ export default function ProductEdit({ product, onEdit }: { product: Product, onE
         setLoading(true);
 
         try {
-            const result = await callWithAuth(await editProduct(product));
+            const result = await callWithAuth(() => editProduct(product));
             if (result) {
                 toast.success("Chỉnh sửa thành công");
                 onEdit(result);
@@ -126,7 +126,7 @@ export default function ProductEdit({ product, onEdit }: { product: Product, onE
                     </div>
                     <DialogFooter>
                         <Button type="submit">Lưu thay đổi</Button>
-                        {loading ? "Đang lưu..." : "Lưu thay đổi"}
+                        {loading ? "Đang lưu..." : undefined}
                     </DialogFooter>
                 </form>
             </DialogContent>

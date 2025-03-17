@@ -76,3 +76,49 @@ export const editCategory = async (id: string, name: string, description: string
         return { error: "Không thể kết nối đến server!" };
     }
 }
+
+
+export const getProductsByCategoryId = async (id: string) => {
+        const token = getAccessToken("accessToken");
+    try {
+        const response = await fetch(`${API_URL}/GetProducts/${id}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            return data;
+        }
+        else
+            return { error: "Dữ liệu không hợp lệ" }
+    } catch (error) {
+        return { error: "Không thể kết nối đến server!" };
+    }
+}
+
+
+export const getCategoryById = async (id: string) => {
+    const token = getAccessToken("accessToken");
+try {
+    const response = await fetch(`${API_URL}/getbyid/${id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        }
+    });
+
+    if (response.status === 200) {
+        const data = await response.json();
+        return data;
+    }
+    else
+        return { error: "Dữ liệu không hợp lệ" }
+} catch (error) {
+    return { error: "Không thể kết nối đến server!" };
+}
+}

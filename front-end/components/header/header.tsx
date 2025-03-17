@@ -1,6 +1,5 @@
 "use client"
 import DefaultAvatar from "@/components/profile/default-avatar";
-import { PROFILE } from "@/components/profile/constants";
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
@@ -8,28 +7,60 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { LogOut, Shield, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getHeaderProfile } from "../service/token-handler";
+import { callWithAuth, clearCookie, getHeaderProfile } from "../service/token-handler";
+import { Button } from "../ui/button";
 
 export default function Header({ title }: { title: string }) {
     const router = useRouter();
     const pathname = usePathname();
-
+    const [avatar, setAvatar] = useState<string | null>(null);
     const [profile, setProfile] = useState<{
         realName: string,
         email: string,
-        profilePicture: string,
+        pictureURL: string,
         role: string
     }>({
         realName: "",
         email: "",
-        profilePicture: "",
+        pictureURL: "",
         role: ""
     });
 
     const fetchHeaderProfile = async () => {
         const result = await getHeaderProfile();
-        if (result)
+        if (result) {
             setProfile(result);
+            if (result.pictureURL)
+                if (result.pictureURL.trim())
+                    checkImage(result.pictureURL);
+            setAvatar(null);
+
+        }
+    };
+
+    const checkImage = async (imageUrl: string) => {
+        const validExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg"];
+
+        if (!validExtensions.some(ext => imageUrl.endsWith(ext))) {
+            setAvatar(null);
+            return;
+        }
+
+        try {
+            const response = await fetch(imageUrl, { method: "HEAD" });
+            setAvatar(response.ok ? imageUrl : null);
+        } catch (error) {
+            setAvatar(null);
+        }
+    };
+
+    const logOut = () => {
+        const isConfirmed = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
+        if (!isConfirmed) return;
+
+        clearCookie();
+
+        router.push("/login");
     }
 
     useEffect(() => {
@@ -43,14 +74,14 @@ export default function Header({ title }: { title: string }) {
             <div className="ml-auto mr-4">
                 <DropdownMenu >
                     <DropdownMenuTrigger asChild>
-                        <button>
-                            {profile.profilePicture ?
+                        <Button variant="ghost" className="rounded-full">
+                            {avatar ?
                                 <Avatar >
-                                    <AvatarImage src={profile.profilePicture} alt="avatar" className="object-cover w-10 h-10 rounded-full"></AvatarImage>
+                                    <AvatarImage src={avatar} alt="avatar" className="object-cover w-10 h-10 rounded-full"></AvatarImage>
                                 </Avatar> :
                                 <DefaultAvatar name={profile.realName} size={10} />}
 
-                        </button>
+                        </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         side="bottom"
@@ -70,13 +101,15 @@ export default function Header({ title }: { title: string }) {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            onClick={() => router.push('/profile')}
+                            onClick={() => router.push('/setrole')}
                             className="flex p-2 hover:bg-accent hover:outline-none rounded-md hover:cursor-pointer">
                             <Shield />
                             <span className=" uppercase">{profile.role}</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="flex p-2 hover:bg-accent hover:outline-none hover:cursor-pointer rounded-md">
+                        <DropdownMenuItem
+                            onClick={logOut}
+                            className="flex p-2 hover:bg-accent hover:outline-none hover:cursor-pointer rounded-md">
                             <LogOut />
                             Đăng xuất
                         </DropdownMenuItem>

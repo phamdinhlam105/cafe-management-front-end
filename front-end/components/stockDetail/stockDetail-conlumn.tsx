@@ -25,18 +25,18 @@ export const getStockDetailColumns = (): ColumnDef<StockDetail>[] => [
     {
         accessorKey: "startOfDay",
         header: ({ column }) => <ColumnHeader column={column} title="Số lượng đầu ngày" />,
-        cell: ({ row }) => <div className="text-normal">{row.getValue("startOfDay")}</div>
+        cell: ({ row }) => <div className="text-normal">{row.original.stockAtStartOfDay}</div>
     },
 
     {
         accessorKey: "import",
         header: ({ column }) => <ColumnHeader column={column} title="Số lượng nhập kho" />,
-        cell: ({ row }) => <div className="text-md text-gray-400">{row.getValue("import")}</div>
+        cell: ({ row }) => <div className="text-md text-gray-400">{row.original.stockImport}</div>
     },
     {
         accessorKey: "remain",
         header: ({ column }) => <ColumnHeader column={column} title="Số lượng tồn kho" />,
-        cell: ({ row }) => <div className="text-md text-gray-400">{row.getValue("remain")}</div>,
+        cell: ({ row }) => <div className="text-md text-gray-400">{row.original.stockRemaining}</div>,
     },
   
 ]

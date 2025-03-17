@@ -28,7 +28,7 @@ export default function ReportChart({ data }: { data: any[] }) {
         },
         totalExpenditure: {
             label: "Chi tiêu",
-            color: "#60a5fa",
+            color: "#b58502",
         },
         numberOfFinishedOrders: {
             label: "Đơn hoàn thành",

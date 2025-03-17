@@ -5,7 +5,7 @@ export interface Promotion {
     id: string;
     name: string;
     description: string;
-    value: number;
+    discount: number;
     isActive: boolean;
     schedules:PromotionSchedule[]
 }

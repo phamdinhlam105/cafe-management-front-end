@@ -25,8 +25,8 @@ export const getIngredientColumns = (): ColumnDef<Ingredient>[] => [
     {
         accessorKey: "pictureURL",
         header: ({ column }) => <ColumnHeader column={column} title="Hình ảnh" />,
-        cell: ({ row }) => <div className="text-md text-gray-400">
-            {row.original.pictureURL ? <img src={row.original.pictureURL} /> :
+        cell: ({ row }) => <div className="text-md text-gray-400 flex justify-center">
+            {row.original.pictureURL ? <img width={100} height={100} src={row.original.pictureURL} /> :
                 "Không có hình ảnh"}
         </div>
     },

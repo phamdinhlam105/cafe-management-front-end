@@ -15,23 +15,26 @@ export default function ProductBody() {
 
     const fetchProduct = async () => {
         const result = await callWithAuth(getAllProduct);
-        if (result) {
+        if (!result.error) {
             setData(result);
         }
     };
     useEffect(() => {
         fetchProduct();
-        setFilterData(data);
     }, []);
+
+    useEffect(() => {
+        setFilterData(data);
+    }, [data])
 
     const handleSearchClick = () => {
         if (search)
             setFilterData(data.filter(item => item.name.includes(search)));
         else
-        setFilterData(data);
+            setFilterData(data);
     }
 
-    const onDelete = (idRow:string)=>{
+    const onDelete = (idRow: string) => {
 
     }
     const onEdit = (updatedProduct: Product) => {
@@ -39,12 +42,13 @@ export default function ProductBody() {
             prev.map(cat => (cat.id === updatedProduct.id ? updatedProduct : cat))
         );
     };
-    const columns = getProductColumns({onEdit});
+    const columns = getProductColumns({ onEdit });
     return <div className="p-4 space-y-4">
         <div className="flex justify-between">
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
             <Link href="/new-product" className="border rounded-md py-2 px-2 hover:bg-gray-200">Thêm sản phẩm</Link>
         </div>
-        <DataTable columns={columns} data={filterData} onDelete={onDelete} />
+        {filterData.length > 0 ?
+            <DataTable columns={columns} data={filterData} onDelete={onDelete} /> : "Đang tải dữ liệu"}
     </div>
 }

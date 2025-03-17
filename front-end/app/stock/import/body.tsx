@@ -1,5 +1,6 @@
 "use client"
 import { DateTimePicker24h } from "@/components/datetime-picker";
+import { formatDate, formatDateTime } from "@/components/helper/date-to-string";
 import { Ingredient } from "@/components/ingredient/ingredient-model";
 import { getAllIngredient } from "@/components/service/ingredient-service";
 import { importStock } from "@/components/service/stock-entry-service";
@@ -33,9 +34,9 @@ export default function ImportStockBody() {
     const fetchStockDetails = async () => {
         setLoadingStock(true);
         const result = await callWithAuth(getTodayStock);
-        if (result.dailyStockDetails)
-            setTodayStock(result.dailyStockDetails);
-        setLoadingStock(true);
+        if (result.details)
+            setTodayStock(result.details);
+
     }
 
 
@@ -43,40 +44,52 @@ export default function ImportStockBody() {
         setData(() => ingredient.map(i => ({
             id: "",
             stockEntryId: "",
+            ingredientId: i.id,
             ingredient: i,
             quantity: 0,
-            price: "",
-            total: "0"
+            price: "0",
+            totalValue: "0"
         })));
     }
     useEffect(() => {
         fetchIngredients();
         fetchStockDetails();
     }, []);
+
+
     useEffect(() => {
         initialTable();
-    }, [ingredient])
+        setLoadingStock(false);
+    }, [ingredient, todayStock])
 
     const handleFinish = async () => {
+     
         const newEntry = {
-            entryDate: (new Date).toISOString(),
-            totalValue: data.reduce((acc, ed) => acc + Number(ed.total), 0),
-            stockEntryDetails: data.map(ed => ({
+            entryDate: formatDateTime(new Date),
+            totalValue: data.reduce((acc, ed) => acc + Number(ed.totalValue), 0).toString(),
+            details: data.map(ed => ({
                 ingredientId: ed.ingredient.id,
-                quantity: ed.quantity,
-                price: ed.price,
-
+                quantity: Number(ed.quantity),
+                price: Number(ed.price)
             }))
         }
-        const result = await callWithAuth(await importStock(newEntry));
+        if(Number(newEntry.totalValue) == 0 || !newEntry.totalValue){
+            toast.warning("Phiếu nhập kho không hợp lệ",{
+                description:"Không thể không nhập gì cả"
+            })
+        }
+        const result = await callWithAuth(() => importStock(newEntry));
         if (!result.error) {
             toast("Nhập kho thành công");
             initialTable();
         }
         else {
-            toast("Nhập kho không thành công")
+            toast.error("Lỗi khi nhập kho", {
+                description: `${result.error}`
+            })
         }
     }
+
 
     var columns = loadingStock ? [] : getStockEntryColumn(setData, todayStock);
 

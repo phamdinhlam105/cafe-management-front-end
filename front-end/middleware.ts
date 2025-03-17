@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { toast } from "sonner";
 export function middleware(req: NextRequest) {
-    const token = req.cookies.get("accessToken")?.value; 
+    const token = req.cookies.get("accessToken")?.value;
 
     if (!token) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
     try {
-        const decoded = jwt.decode(token) as { exp: number,role:string } | null;
+        const decoded = jwt.decode(token) as { exp: number, role: string } | null;
 
         if (!decoded || !decoded.exp || decoded.exp * 1000 < Date.now()) {
             const res = NextResponse.redirect(new URL("/login", req.url));
@@ -22,8 +23,8 @@ export function middleware(req: NextRequest) {
         }
         const url = req.nextUrl.clone();
         const role = decoded.role;
-        if (url.pathname.startsWith("/admin") && role !== "administrator") {
-            url.pathname = "/403"; // Chuyển hướng nếu không đủ quyền
+        if (url.pathname.startsWith("/setrole") && !["administrator", "Quản lý"].includes(role)) {
+            url.pathname = "/";
             return NextResponse.redirect(url);
         }
 
@@ -33,8 +34,6 @@ export function middleware(req: NextRequest) {
         console.error("Invalid token:", error);
         return NextResponse.redirect(new URL("/login", req.url));
     }
-
-    return NextResponse.next();
 }
 
 
@@ -47,5 +46,9 @@ export const config = {
         "/profile/:path*",
         "/report/:path*",
         "/promotion/:path*",
+        "/stock/:path*",
+        "/setrole/:path*",
+        "/new-order/:path*",
+        "/new-product/:path*",
     ],
 };

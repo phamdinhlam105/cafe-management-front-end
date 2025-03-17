@@ -5,6 +5,6 @@ export interface StockDetail{
     idStock: string;
     stockAtStartOfDay: number;
     stockImport: number;
-    stockRemain: number;
+    stockRemaining: number;
     ingredient: Ingredient;
 }

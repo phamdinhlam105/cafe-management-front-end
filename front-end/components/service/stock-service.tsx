@@ -72,7 +72,7 @@ export const getDetailByDate = async (date: string) => {
 export const updateStock = async (updatedStock: any) => {
     const token = getAccessToken("accessToken");
     try {
-        const response = await fetch(`${API_URL}/remain`, {
+        const response = await fetch(`${API_URL}/update`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,

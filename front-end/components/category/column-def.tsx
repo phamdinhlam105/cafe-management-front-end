@@ -3,6 +3,32 @@ import SelectCell from "@/components/table/select-cell";
 import SelectHeader from "@/components/table/select-header";
 import { ColumnDef } from "@tanstack/react-table";
 import CategoryEdit from "./category-edit";
+import { callWithAuth } from "../service/token-handler";
+import { getProductsByCategoryId } from "../service/category-service";
+import { useEffect, useState } from "react";
+
+
+
+const fetchCountProducts = async (idCategory: string) => {
+    const result = await callWithAuth(() => getProductsByCategoryId(idCategory));
+    if (!result.error)
+        return result.count();
+    return 0;
+}
+
+const ProductCountCell = ({ idCategory }: { idCategory: string }) => {
+    const [count, setCount] = useState<number | null>(null);
+
+    useEffect(() => {
+        const fetchCount = async () => {
+            const result = await fetchCountProducts(idCategory);
+            setCount(result);
+        };
+        fetchCount();
+    }, [idCategory]);
+
+    return <div className="text-md text-gray-400">{count !== null ? count : "Đang tải..."}</div>;
+};
 
 export const getCategoryColumns = ({ onEdit }: {
     onEdit: (category: Category) => void;
@@ -22,10 +48,7 @@ export const getCategoryColumns = ({ onEdit }: {
         {
             accessorKey: "products",
             header: ({ column }) => <ColumnHeader column={column} title="Số lượng sản phẩm" />,
-            cell: ({ row }) => {
-                const products = row.getValue("products") as Product[];
-                return <div className="text-md text-gray-400">{products.length}</div>;
-            }
+            cell: ({ row }) => <div className="text-md text-gray-400">{row.original.products? row.original.products.length : "Không xác định"}</div>
         },
         {
             accessorKey: "description",

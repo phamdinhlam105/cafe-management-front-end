@@ -13,25 +13,25 @@ export default function NewIngredient({ onEdit }: { onEdit: (updatedIngredient: 
     const [name, setName] = useState("")
     const [measurement, setMeasurement] = useState("")
     const [pictureUrl, setPictureUrl] = useState("");
-    const [loading,setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const handleSave = async (event: FormEvent) => {
         event.preventDefault();
         setLoading(true);
-        if (!name || !measurement){
-            toast("Vui lòng điền đủ thông tin bắt buộc",{
-                description:"Hãy điền đầy đủ tên và đơn vị đo lường"
+        if (!name || !measurement) {
+            toast("Vui lòng điền đủ thông tin bắt buộc", {
+                description: "Hãy điền đầy đủ tên và đơn vị đo lường"
             })
             return;
         }
 
         const newIngredient = {
-            name:name,
+            name: name,
             measurementUnit: measurement,
-            pictureUrl:pictureUrl?pictureUrl:""
+            pictureUrl: pictureUrl ? pictureUrl : null
         }
 
-        const result = await callWithAuth(await addIngredient(newIngredient));
-        if(result){
+        const result = await callWithAuth(() => addIngredient(newIngredient));
+        if (!result.error) {
             onEdit(result);
             toast("Thêm nguyên liệu thành công");
             setName("");
@@ -69,9 +69,9 @@ export default function NewIngredient({ onEdit }: { onEdit: (updatedIngredient: 
                 {pictureUrl ? <img src={pictureUrl} /> : "Không có ảnh"}
             </div>
             <DialogFooter>
-                <Button disabled={!loading} variant="outline" type="submit">Hủy</Button>
-                <Button disabled={!loading} type="submit" onClick={handleSave}>Lưu</Button>
-                {loading?"Đang thêm dữ liệu":undefined}
+                <Button disabled={loading} variant="outline" type="submit">Hủy</Button>
+                <Button disabled={loading} type="submit" onClick={handleSave}>Lưu</Button>
+                {loading ? "Đang thêm dữ liệu" : undefined}
             </DialogFooter>
         </DialogContent>
     </Dialog>

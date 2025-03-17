@@ -6,12 +6,9 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { callWithAuth } from "../service/token-handler";
-import { createNewCategory, editCategory } from "../service/category-service";
+import { createNewCategory } from "../service/category-service";
 
-export default function NewCategory({data, setData}:{
-    data:Category[],
-    setData:React.Dispatch<React.SetStateAction<Category[]>>
-}) {
+export default function NewCategory({ onEdit }: { onEdit: (newCategory: Category) => void }) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
@@ -21,10 +18,10 @@ export default function NewCategory({data, setData}:{
         setLoading(true);
 
         try {
-            const result = await callWithAuth(await createNewCategory(name, description));
-            if (result) {
+            const result = await callWithAuth(() => createNewCategory(name, description));
+            if (!result.error) {
+                onEdit(result);
                 toast.success("Thêm thành công");
-                setData([...data, result]);
             } else {
                 toast.error("Có lỗi xảy ra, vui lòng thử lại!");
             }
@@ -39,7 +36,7 @@ export default function NewCategory({data, setData}:{
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="py-1 px-2 items-center hover:bg-gray-300 hover:text-neutral-900 rounded-sm">Chỉnh sửa</Button>
+                <Button className="py-1 px-2 items-center hover:bg-gray-300 hover:text-neutral-900 rounded-sm">Danh mục mới</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <form onSubmit={submitChange}>

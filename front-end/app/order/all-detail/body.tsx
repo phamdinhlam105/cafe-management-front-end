@@ -1,11 +1,13 @@
 "use client"
 
 import { DatePicker } from "@/components/date-picker";
+import { getAllDetailsColumns } from "@/components/orderDetail/allDetail-columns-def";
 import { getOrderDetailColumns } from "@/components/orderDetail/column-def";
 import { OrderDetail } from "@/components/orderDetail/orderDetail-model";
 import { getAllOrderDetail, getOrderDetailByDate } from "@/components/service/order-detail-service";
 import { callWithAuth } from "@/components/service/token-handler";
 import { DataTable } from "@/components/table/data-table";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 export default function AllOrderDetailBody() {
@@ -26,7 +28,7 @@ export default function AllOrderDetailBody() {
   }
   const fetchDetailsByDate = async () => {
     const stringDate = convertToDateOnlyString(selectedDate);
-    const result = await callWithAuth(await getOrderDetailByDate(stringDate));
+    const result = await callWithAuth(() => getOrderDetailByDate(stringDate));
     if (result)
       setData(result);
   }
@@ -35,18 +37,21 @@ export default function AllOrderDetailBody() {
     fetchAllDetails();
   }, []);
 
-  useEffect(()=>{
+  const handleResetFilter = () => {
+    fetchAllDetails();
+  }
+  const handleSearch=()=>{
     if (selectedDate) fetchDetailsByDate();
-  },[selectedDate])
-
+  }
   const onDelete = (idRow: string) => {
 
   }
-
-  var getColumns = getOrderDetailColumns({ onDelete });
+  var getColumns = getAllDetailsColumns();
   return <div className="p-4 space-y-4">
-    <div>
+    <div className="flex items-center space-x-4"> 
       Tìm kiếm theo ngày <DatePicker date={selectedDate} setDate={setSelectedDate} />
+      <Button onClick={handleSearch}>Tìm kiếm</Button>
+      <Button variant="outline" onClick={handleResetFilter}>Xóa bộ lọc</Button>
     </div>
     <DataTable columns={getColumns} data={data} onDelete={onDelete} />
   </div>

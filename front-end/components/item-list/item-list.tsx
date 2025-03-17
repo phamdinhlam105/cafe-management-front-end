@@ -2,6 +2,7 @@ import { CircleX, ReceiptText } from "lucide-react"
 import { OrderStatus } from "../order/enums"
 import { Order } from "../order/order-model"
 import Link from "next/link"
+import { formatISOToNormalDate } from "../helper/string-to-date"
 
 export default function ItemList({ data }: { data: Order[] }) {
     return (
@@ -13,7 +14,7 @@ export default function ItemList({ data }: { data: Order[] }) {
                         <div className="flex-1 truncate">
                             <div className="flex items-center justify-between space-x-3">
                                 <h3 className={`truncate text-md font-semibold ${(() => {
-                                    switch (item.orderStatus) {
+                                    switch (item.status) {
                                         case OrderStatus.New:
                                             return 'text-green-800';
                                         case OrderStatus.Completed:
@@ -23,39 +24,39 @@ export default function ItemList({ data }: { data: Order[] }) {
                                         default:
                                             return '';
                                     }
-                                })()}`}>{OrderStatus[item.orderStatus]} Order</h3>
+                                })()}`}>{OrderStatus[item.status]} Order</h3>
                                 <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium ring-1 ring-inset ring-green-600/20">
-                                    Mã: {item.id}</span>
+                                    Bàn:{item.no} </span>
                             </div>
                             <span className="mt-1 truncate text-sm text-gray-500">
-                                Khách hàng:{item.customerId ? 'Khách quen' : 'Khách vãng lai'}
+                                Khách hàng:
                             </span>
                             <p className="truncate text-sm font-bold">
-                                Tại quầy
+                            {item.customerName}
                             </p>
                             <span className="mt-1 truncate text-sm text-gray-500">
-                                Thời gian:{' '}
+                                Thời gian:
                             </span>
                             <p className="truncate text-sm">
-                                {item.createAt}
+                                {" "+formatISOToNormalDate(item.createdAt)}
                             </p>
                             <p className="mt-1 truncate text-md">
                                 <span className="text-gray-500">
-                                    Số lượng:{' '}
+                                    Số lượng:
                                 </span>
-                                {item.quantity}</p>
+                                {" "+item.amount}</p>
                             <p className="mt-1 truncate text-md ">
                                 <span className="text-gray-500">
-                                    Tổng tiền:{' '}
+                                    Tổng tiền:
                                 </span>
-                                {item.price}
+                                {" "+item.total}
                             </p>
-                            {item.note && <p className="mt-1 truncate text-md ">
+                            <p className="mt-1 truncate text-md ">
                                 <span className="text-gray-500">
-                                    Ghi chú:{' '}
+                                    Ghi chú: 
                                 </span>
-                                {item.note}
-                            </p>}
+                                 {" "+item.note}
+                            </p>
                         </div>
                     </div>
                     <div>
