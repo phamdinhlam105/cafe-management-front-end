@@ -5,7 +5,6 @@ import "./globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSideBar } from "@/components/sidebar.tsx/appsidebar";
 import { Toaster } from "sonner";
-import ClientAuthWrapper from "@/components/login/ClientAuthWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
