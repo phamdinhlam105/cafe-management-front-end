@@ -26,7 +26,7 @@ export default function OrderBody() {
     }, []);
 
     useEffect(() => {
-        setDisplayData(data);
+        setDisplayData(data.filter(order => order.status === OrderStatus.New));
     }, [data])
 
     const filterData = (status: string) => {
@@ -47,6 +47,9 @@ export default function OrderBody() {
                     break;
             }
     };
+    const onEdit =()=>{
+        fetchOrders();
+    }
 
     return <div className="p-4 space-y-5">
         <div className="h-10 flex space-x-4">
@@ -80,6 +83,6 @@ export default function OrderBody() {
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
-        <ItemList data={displayData} />
+        <ItemList data={displayData} onChange={onEdit} />
     </div>
 }

@@ -24,6 +24,7 @@ export default function NewOrderBody() {
     const [isOpen, setIsOpen] = useState(false);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [address, setAddress] = useState('');
+    const [tableNo, setTableNo] = useState<number>();
 
     const handleCustomerChange = (value: string) => {
         if (value)
@@ -33,7 +34,7 @@ export default function NewOrderBody() {
     };
 
     const fetchCreateOrder = async () => {
-        const result = await callWithAuth(() => createOrder(note||undefined,customerId));
+        const result = await callWithAuth(() => createOrder(note || undefined, customerId));
         if (!result.erorr)
             return result;
         toast.error("Đã xảy ra lỗi khi tạo đơn", {
@@ -68,7 +69,8 @@ export default function NewOrderBody() {
         const newCustomer = {
             name: newCustomerName,
             phone: newCustomerPhone || null,
-            address: address || null
+            address: address || null,
+            no: tableNo
         };
         const result = await fetchCreateCustomer(newCustomer);
         if (result) {
@@ -94,7 +96,7 @@ export default function NewOrderBody() {
             setNote('');
         }
         else
-        toast.error("Lỗi khi tạo đơn hàng")
+            toast.error("Lỗi khi tạo đơn hàng")
     };
 
     useEffect(() => {
@@ -145,6 +147,20 @@ export default function NewOrderBody() {
                         onChange={(e) => setNote(e.target.value)}
                         className="mt-1"
                         placeholder="Nhập ghi chú (tùy chọn)"
+                    />
+                </div>
+                <div className="flex items-center justify-left">
+                    <Label htmlFor="no" className="block text-sm font-medium text-gray-700 w-20">
+                        Số bàn
+                    </Label>
+                    <Input
+
+                        id="no"
+                        type="number"
+                        value={tableNo}
+                        onChange={(e) => setTableNo(Number(e.target.value))}
+                        className="w-40"
+                        placeholder=""
                     />
                 </div>
                 <div>

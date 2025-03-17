@@ -1,10 +1,34 @@
+"use client"
 import { CircleX, ReceiptText } from "lucide-react"
 import { OrderStatus } from "../order/enums"
 import { Order } from "../order/order-model"
 import Link from "next/link"
 import { formatISOToNormalDate } from "../helper/string-to-date"
+import { callWithAuth } from "../service/token-handler"
+import { cancelOrderService } from "../service/order-service"
+import { toast } from "sonner"
+import { Button } from "../ui/button"
 
-export default function ItemList({ data }: { data: Order[] }) {
+export default function ItemList({ data,onChange }: { data: Order[],onChange:()=>void }) {
+
+    const cancelOrder = async (id: string) => {
+
+
+        const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
+        if (!isConfirmed) return;
+
+
+        const result = await callWithAuth(() => cancelOrderService(id))
+        if (!result.error) {
+            toast("Hủy đơn thành công")
+            onChange();
+        }
+        else {
+            toast.error("Hủy đơn thất bại", { description: result.error });
+            return null
+        }
+    }
+
     return (
         <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 shadow-sm ">
             {data.length === 0 && <><div></div><h2 className="text-2xl font-bold mx-auto text-red-600">Không có dữ liệu nào</h2></>}
@@ -24,7 +48,20 @@ export default function ItemList({ data }: { data: Order[] }) {
                                         default:
                                             return '';
                                     }
-                                })()}`}>{OrderStatus[item.status]} Order</h3>
+                                })()}`}>
+                                    {(() => {
+                                        switch (item.status) {
+                                            case OrderStatus.New:
+                                                return 'Đơn hàng mới';
+                                            case OrderStatus.Completed:
+                                                return 'Đã hoàn thành';
+                                            case OrderStatus.Cancelled:
+                                                return 'Đã hủy đơn';
+                                            default:
+                                                return '';
+                                        }
+                                    })()}
+                                </h3>
                                 <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium ring-1 ring-inset ring-green-600/20">
                                     Bàn:{item.no} </span>
                             </div>
@@ -32,30 +69,30 @@ export default function ItemList({ data }: { data: Order[] }) {
                                 Khách hàng:
                             </span>
                             <p className="truncate text-sm font-bold">
-                            {item.customerName}
+                                {item.customerName}
                             </p>
                             <span className="mt-1 truncate text-sm text-gray-500">
                                 Thời gian:
                             </span>
                             <p className="truncate text-sm">
-                                {" "+formatISOToNormalDate(item.createdAt)}
+                                {" " + formatISOToNormalDate(item.createdAt)}
                             </p>
                             <p className="mt-1 truncate text-md">
                                 <span className="text-gray-500">
                                     Số lượng:
                                 </span>
-                                {" "+item.amount}</p>
+                                {" " + item.amount}</p>
                             <p className="mt-1 truncate text-md ">
                                 <span className="text-gray-500">
                                     Tổng tiền:
                                 </span>
-                                {" "+item.total}
+                                {" " + item.total}
                             </p>
                             <p className="mt-1 truncate text-md ">
                                 <span className="text-gray-500">
-                                    Ghi chú: 
+                                    Ghi chú:
                                 </span>
-                                 {" "+item.note}
+                                {" " + item.note}
                             </p>
                         </div>
                     </div>
@@ -67,11 +104,16 @@ export default function ItemList({ data }: { data: Order[] }) {
                                     Chi tiết
                                 </Link>
                             </div>
-                            <div className="-ml-px flex w-0 flex-1">
-                                <Link href="#" className=" relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-red-600">
+                            <div className="-ml-px flex w-0 flex-1 items-center">
+                                <Button 
+                                variant="ghost"
+                                disabled={item.status!=0}
+                                onClick={() => cancelOrder(item.id)} 
+                                className=" relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-red-600">
                                     <CircleX />
-                                    Hủy đơn
-                                </Link>
+                                    Hủy đơn</Button>
+
+
                             </div>
                         </div>
                     </div>

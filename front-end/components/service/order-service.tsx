@@ -85,10 +85,8 @@ export const cancelOrderService = async (id: string) => {
                 "Content-Type": "application/json",
             }
         });
-
-        if (response.status === 204) {
-            const data = await response.json();
-            return data;
+        if (response.ok) {
+            return { message: "success" }
         }
         if (response.status === 400) {
             const data = await response.json();

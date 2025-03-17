@@ -40,9 +40,9 @@ export const setRoleRequest = async (idUser: string, roleId: string) => {
       }),
     });
 
-    if (response.status === 200) {
-      const data = await response.json();
-      return data;
+    if (response.ok) {
+    
+      return {message:"Success"};
     }
   } catch (error) {
     return { error: "Không thể kết nối đến server!" };

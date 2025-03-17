@@ -2,7 +2,6 @@
 
 import { DatePicker } from "@/components/date-picker";
 import { getAllDetailsColumns } from "@/components/orderDetail/allDetail-columns-def";
-import { getOrderDetailColumns } from "@/components/orderDetail/column-def";
 import { OrderDetail } from "@/components/orderDetail/orderDetail-model";
 import { getAllOrderDetail, getOrderDetailByDate } from "@/components/service/order-detail-service";
 import { callWithAuth } from "@/components/service/token-handler";

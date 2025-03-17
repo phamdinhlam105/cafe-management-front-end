@@ -20,7 +20,7 @@ export const formatISOToNormalDate = (isoString: string): string => {
     const pad = (num: number) => num.toString().padStart(2, "0");
 
     const day = pad(date.getDate());
-    const month = pad(date.getMonth() + 1); // Tháng bắt đầu từ 0
+    const month = pad(date.getMonth() + 1);
     const year = date.getFullYear();
 
     const hours = pad(date.getHours());

@@ -104,15 +104,6 @@ export default function OrderDetailBody() {
 
     }
 
-    const handleSearchClick = () => {
-        if (search)
-            setFilterData(data.filter(item => item.productName.toLowerCase().includes(search.toLowerCase())));
-        else
-            if (orderId) {
-                setFilterData(data);
-            }
-    }
-
     const handleSelectPromotionsClick = (value: string) => {
         if (value != 'none' || value == null)
             setChosenPromotion(promotions.findLast(p => p.id === value));
@@ -124,15 +115,15 @@ export default function OrderDetailBody() {
         if (orderId)
             fetchOrder;
     }
-    const columns = getOrderDetailColumns({ onDelete, onEdit, status: currentOrder?.status ?? 0  });
-    const NewButton = ({ currentOrder,onEdit }: { currentOrder: Order,onEdit: ()=>void }) => {
+    const columns = getOrderDetailColumns({ onDelete, onEdit, status: currentOrder?.status ?? 0 });
+    const NewButton = ({ currentOrder, onEdit }: { currentOrder: Order, onEdit: () => void }) => {
         return currentOrder.status !== OrderStatus.Completed ?
             <NewOrderDetailDialog
                 currentOrder={currentOrder}
                 onEdit={onEdit} /> : undefined;
     }
 
- 
+
 
     const finishOrder = async () => {
 
@@ -158,7 +149,7 @@ export default function OrderDetailBody() {
 
 
         const result = await callWithAuth(() => cancelOrderService(currentOrder.id || ""))
-        if (result == null) {
+        if (!result.error) {
             fetchOrder();
             toast("Hủy đơn thành công")
         }
@@ -170,8 +161,10 @@ export default function OrderDetailBody() {
 
     return <div className="p-4 space-y-4">
         <div className="flex justify-between mb-10">
-            <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
-            {currentOrder && <OrderStatusButton status={currentOrder.status} finishOrder={finishOrder}/>}
+           
+            <div>Bàn số <span>{currentOrder?.no || ""}</span></div>
+            {currentOrder && <OrderStatusButton status={currentOrder.status} finishOrder={finishOrder} />}
+            {currentOrder?.status==0 &&
             <Select onValueChange={handleSelectPromotionsClick}>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Chọn khuyến mãi" />
@@ -183,7 +176,7 @@ export default function OrderDetailBody() {
                         <SelectItem value="none">Không khuyến mãi</SelectItem>
                     </SelectGroup>
                 </SelectContent>
-            </Select>
+            </Select>}
             {currentOrder && <NewButton currentOrder={currentOrder} onEdit={onEdit} />}
         </div>
 
@@ -201,13 +194,13 @@ export default function OrderDetailBody() {
                     </span></h2>
                 </>
             }
-            <Button variant="destructive" 
-            disabled={currentOrder?.status!=0}
-            onClick={cancelOrder} 
-            className="w-28">Hủy đơn</Button>
+            <Button variant="destructive"
+                disabled={currentOrder?.status != 0}
+                onClick={cancelOrder}
+                className="w-28">Hủy đơn</Button>
         </div>
 
 
-        {filterData ? <DataTable columns={columns} data={filterData} onDelete={onDelete} /> : "Đang tải dữ liệu"}
+        {data ? <DataTable columns={columns} data={data} onDelete={onDelete} /> : "Đang tải dữ liệu"}
     </div>
 }

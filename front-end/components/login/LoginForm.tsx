@@ -32,10 +32,9 @@ export default function LoginForm() {
         if (decoded.role === "Khách") {
           alert("Hãy liên hệ quản lý để được cấp quyền!");
           return;
-
-        alert(`Xin chào ${data.userName}!`);
+        }
       }
-    }
+      alert(`Xin chào ${data.userName}!`);
       router.push('/order');
     } catch (err: any) {
       setError(err.message);

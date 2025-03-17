@@ -10,49 +10,35 @@ import {
     SelectLabel,
     SelectItem
 } from "../ui/select"
-import { callWithAuth } from "../service/token-handler";
-import { getAllRoles } from "../service/account-service";
 
-export default function SetRoleButton({ currentRole, idUser, onChange }: {
+export default function SetRoleButton({ currentRole, idUser, onChange, allRoles }: {
     currentRole: { id: string, roleName: string },
     idUser: string,
-    onChange: (idUser: string, idRole: string) => void
+    onChange: (idUser: string, idRole: string) => void,
+    allRoles: { id: string, roleName: string }[]
 }) {
-    const [allRole, setAllRole] = useState<{ id: string, roleName: string }[]>([]);
     const [chosenRole, setChosenRole] = useState<{ id: string, roleName: string }>(currentRole)
-
-    const fetchAllRole = async () => {
-        const result = await callWithAuth(getAllRoles);
-        if (!result.error)
-            setAllRole(result);
-    }
-
-    useEffect(() => {
-        fetchAllRole();
-        console.log(currentRole)
-    }, []);
-    useEffect(() => {
-        setChosenRole(currentRole);
-    }, [allRole])
-
     const handleRoleChange = (value: string) => {
         if (!value)
             return;
-        setChosenRole({ id: value, roleName: allRole.findLast(r => r.id === value)?.roleName || "" });
-        onChange(idUser, value);
-    }
+        const selectedRole = allRoles.find(r => r.id === value);
+        if (selectedRole) {
+            setChosenRole(selectedRole);
+            onChange(idUser, value);
+        }
+    };
 
-    return <div>
-        <Select onValueChange={handleRoleChange}>
+    return <div>{currentRole ?
+        <Select onValueChange={handleRoleChange} value={chosenRole.id}>
             <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={chosenRole.roleName} defaultValue={currentRole.id} />
+                <SelectValue placeholder={chosenRole.roleName} />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Vai trò</SelectLabel>
-                    {allRole.map(p => <SelectItem key={p.id} value={p.id}>{p.roleName}</SelectItem>)}
+                    {allRoles.map(p => <SelectItem key={p.id} value={p.id}>{p.roleName}</SelectItem>)}
                 </SelectGroup>
             </SelectContent>
-        </Select>
+        </Select> : "Đang tải dữ liệu"}
     </div>
 }
