@@ -3,7 +3,7 @@ import { setAccessToken } from "./token-handler";
 
 const API_URL = NEXT_PUBLIC_API_URL + '/login';
 
-export const loginRequest = async (username:string, password:string) => {
+export const loginRequest = async (username: string, password: string) => {
   try {
     const response = await fetch(API_URL, {
       method: "POST",
@@ -11,22 +11,26 @@ export const loginRequest = async (username:string, password:string) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName: username, 
+        userName: username,
         password: password,
       }),
     });
 
-    if (response.status === 200) {
-      const data = await response.json();
-      if (Object.keys(data).length === 0) {
-        return { error: "Sai tài khoản hoặc mật khẩu!" };
-      }
-      if (data.accessToken) {
-        setAccessToken(data.accessToken);
-      }
-      return data; 
+    if (response.status === 204) {
+      return { error: "Sai tài khoản hoặc mật khẩu" };
     }
-    return { error: "Đăng nhập thất bại!" }; 
+
+    if (response.ok) {
+      const data = await response.json();
+      if (!data || !data.accessToken) {
+        return { error: "Sai tài khoản hoặc mật khẩu" };
+      }
+
+      setAccessToken(data.accessToken);
+      return data;
+    }
+
+    return { error: "Đăng nhập thất bại" };
   } catch (error) {
     return { error: "Không thể kết nối đến server!" };
   }

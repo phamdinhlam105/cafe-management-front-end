@@ -21,26 +21,24 @@ export default function LoginForm() {
     setError(null);
     setLoading(true);
 
-    try {
-      const data = await loginRequest(username, password);
-      if (data.error) {
-        setError(data.error);
-      }
-      else {
-        const decoded = jwt.decode(data.accessToken) as { role: string };
+    const data = await loginRequest(username, password);
 
-        if (decoded.role === "Khách") {
-          alert("Hãy liên hệ quản lý để được cấp quyền!");
-          return;
-        }
-      }
-      alert(`Xin chào ${data.userName}!`);
-      router.push('/order');
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    setLoading(false);
+    if (data.error) {
+      setError(data.error);
+      return;
     }
+    else {
+      const decoded = jwt.decode(data.accessToken) as { role: string };
+
+      if (decoded.role === "Khách") {
+        alert("Hãy liên hệ quản lý để được cấp quyền!");
+        return;
+      }
+    }
+
+    alert(`Xin chào ${data.userName}!`);
+    router.push('/order');
   };
 
 

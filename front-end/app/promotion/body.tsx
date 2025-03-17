@@ -1,4 +1,5 @@
 "use client"
+import EditPromotion from "@/components/promotion/edit-promotion";
 import NewPromotion from "@/components/promotion/new-promotion";
 import NewPromotionSchedule from "@/components/promotion/new-schedule";
 import { Promotion } from "@/components/promotion/promotion-model"
@@ -35,7 +36,7 @@ export default function PromotionBody() {
 
     const fetchSchedules = async () => {
         if (chosenPromotion) {
-            const result = await callWithAuth(()=> getScheduleByPromotionId(chosenPromotion.id));
+            const result = await callWithAuth(() => getScheduleByPromotionId(chosenPromotion.id));
             if (result)
                 setSchedule(result);
         }
@@ -53,8 +54,10 @@ export default function PromotionBody() {
             fetchSchedules();
     }, [chosenPromotion, isChanged])
 
+    const onEdit = async() =>{
+        await fetchPromotions();
+    }
     const onDelete = (idRow: string) => {
-
     }
     const columns = getPromotionScheduleColumns();
     return <div className="p-4 space-y-5">
@@ -74,7 +77,7 @@ export default function PromotionBody() {
                         </DropdownMenuContent>
                     </DropdownMenu> : "Đang load dữ liệu"}
             </div>
-
+            {chosenPromotion && <EditPromotion onEdit={onEdit} currentPromotion={chosenPromotion} />}
             <NewPromotion onNewPromotion={handleNewPromotion} />
         </div>
         <div className="flex space-x-4">
@@ -82,13 +85,10 @@ export default function PromotionBody() {
             <div>{chosenPromotion ? chosenPromotion.description : "Đang load dữ liệu"}</div>
         </div>
         <div className="flex space-x-4">
-            <Label className="block text-md font-medium text-gray-700">Trạng thái</Label>
-            {chosenPromotion ? <div>{chosenPromotion.isActive ? 'Đang áp dụng' : 'Chưa áp dụng'}</div> : "Đang load dữ liệu"}
-        </div>
-        <div className="flex space-x-4">
             <Label className="block text-md font-medium text-gray-700">Chiết khấu: </Label>
             {chosenPromotion ? <div>{chosenPromotion.discount}%</div> : "Đang load dữ liệu"}
         </div>
+
         {chosenPromotion ? <NewPromotionSchedule chosenPromotion={chosenPromotion} setIschanged={setIschanged} /> : ''}
         <h2 className="mt-10 text-xl font-bold text-center">Lịch trình áp dụng khuyến mãi</h2>
         <DataTable columns={columns} data={schedule} onDelete={onDelete} />

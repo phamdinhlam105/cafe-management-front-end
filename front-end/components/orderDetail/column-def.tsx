@@ -3,7 +3,6 @@ import ColumnHeader from "@/components/table/column-header";
 import SelectCell from "@/components/table/select-cell";
 import SelectHeader from "@/components/table/select-header";
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "../ui/button";
 import { OrderDetail } from "./orderDetail-model";
 import EditOrderDetail from "./edit-details";
 
@@ -44,14 +43,8 @@ export const getOrderDetailColumns = ({ onDelete, onEdit, status }: {
             header: () => <div className="text-sm">Hành động</div>,
             cell: ({ row }) => {
                 return <div className="flex justify-center w-23 space-x-2">
-                    {status == 0 && <>
+                    {status == 0 &&
                         <EditOrderDetail detail={row.original} onEdit={onEdit} />
-                        <Button
-                            onClick={() => onDelete(row.original.id)}
-                            className="py-1 px-2 items-center hover:bg-gray-300 hover:text-neutral-900 rounded-sm"
-                        >
-                            Xóa
-                        </Button></>
                     }
                 </div>
             }

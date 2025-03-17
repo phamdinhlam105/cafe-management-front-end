@@ -83,13 +83,13 @@ export default function ProfileBody() {
                                         <h4 className="font-bold text-sm">EMAIL</h4>
                                         <p className="text-sm">{profile.email}</p>
                                         <h4 className="font-bold text-sm">Birthday</h4>
-                                        <p className="text-sm">{profile.birthday || "Không xác định"}</p>
+                                        <p className="text-sm">{profile.birthDay || "Không xác định"}</p>
                                     </div>
                                     <div className="space-y-2">
                                         <h4 className="font-bold text-sm">Tuổi</h4>
                                         <p className="text-sm">{profile.age || "không xác định"}</p>
                                         <h4 className="font-bold text-sm">Ngày gia nhập</h4>
-                                        <p className="text-sm">{profile.joinDate}</p>
+                                        <p className="text-sm">{profile.joinDate.split('T')[0]}</p>
                                     </div>
                                 </div>
                             </div>

@@ -66,7 +66,7 @@ export default function ImportStockBody() {
      
         const newEntry = {
             entryDate: formatDateTime(new Date),
-            totalValue: data.reduce((acc, ed) => acc + Number(ed.totalValue), 0).toString(),
+            totalValue: data.reduce((acc, ed) => acc + Number(ed.totalValue), 0),
             details: data.map(ed => ({
                 ingredientId: ed.ingredient.id,
                 quantity: Number(ed.quantity),
@@ -80,6 +80,7 @@ export default function ImportStockBody() {
         }
         const result = await callWithAuth(() => importStock(newEntry));
         if (!result.error) {
+        
             toast("Nhập kho thành công");
             initialTable();
         }

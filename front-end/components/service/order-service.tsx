@@ -88,11 +88,8 @@ export const cancelOrderService = async (id: string) => {
         if (response.ok) {
             return { message: "success" }
         }
-        if (response.status === 400) {
-            const data = await response.json();
-            return { error: data.message }
-        }
-        return { error: "Hủy đơn thất bại" }
+        const data = await response.json();
+        return { error: data.message }
     } catch (error) {
         return { error: "Không thể kết nối đến server!" };
     }

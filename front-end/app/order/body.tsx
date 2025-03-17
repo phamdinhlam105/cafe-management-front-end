@@ -1,4 +1,6 @@
 "use client"
+import { DatePicker } from "@/components/date-picker";
+import { stringToDate } from "@/components/helper/string-to-date";
 import ItemList from "@/components/item-list/item-list";
 import { OrderStatus } from "@/components/order/enums";
 import { Order } from "@/components/order/order-model";
@@ -11,6 +13,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function OrderBody() {
+    
     const [data, setData] = useState<Order[]>([]);
     const [displayData, setDisplayData] = useState(data);
     const [filter, setFilter] = useState<string>("all");
@@ -20,6 +23,7 @@ export default function OrderBody() {
             setData(result);
         }
     };
+  
     useEffect(() => {
         fetchOrders();
 
@@ -30,26 +34,32 @@ export default function OrderBody() {
     }, [data])
 
     const filterData = (status: string) => {
+        
+
         if (status === "all") {
             setDisplayData(data);
-        } else
+        } else{
             switch (status) {
                 case '0':
-                    setDisplayData(data.filter(order => order.status === OrderStatus.New));
+                    setDisplayData(displayData.filter(order => order.status === OrderStatus.New));
                     break;
                 case '1':
-                    setDisplayData(data.filter(order => order.status === OrderStatus.Completed));
+                    setDisplayData(displayData.filter(order => order.status === OrderStatus.Completed));
                     break;
                 case '2':
-                    setDisplayData(data.filter(order => order.status === OrderStatus.Cancelled));
+                    setDisplayData(displayData.filter(order => order.status === OrderStatus.Cancelled));
                     break;
                 default:
                     break;
+                    
             }
+        }
+            
     };
-    const onEdit =()=>{
-        fetchOrders();
+    const onEdit = async () => {
+        await fetchOrders();
     }
+
 
     return <div className="p-4 space-y-5">
         <div className="h-10 flex space-x-4">
@@ -58,7 +68,7 @@ export default function OrderBody() {
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline">Bộ lọc</Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="z-20 bg-secondary">
+                <DropdownMenuContent className="bg-secondary">
                     <DropdownMenuItem
                         className="hover:bg-gray-200 rounded-md"
                         onClick={() => { setFilter('all'); filterData('all'); }}>
@@ -82,6 +92,8 @@ export default function OrderBody() {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+           
+            
         </div>
         <ItemList data={displayData} onChange={onEdit} />
     </div>

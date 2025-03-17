@@ -23,10 +23,6 @@ export const SidebarStructure:SidebarModel[] = [
         icon: ShoppingCart,
         items: [
             {
-                title: "Toàn bộ chi tiết",
-                url: "/order/all-detail",
-            },
-            {
                 title:"Đơn hàng mới",
                 url:"/new-order"
             }
@@ -66,16 +62,6 @@ export const SidebarStructure:SidebarModel[] = [
         title: "Khuyến mãi",
         url: "/promotion",
         icon: Gift,
-        items: [
-            {
-                title: "Tạo mới",
-                url: "#",
-            },
-            {
-                title: "Chỉnh sửa",
-                url: "#",
-            },
-        ],
     },
     {
         title: "Báo cáo",

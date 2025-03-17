@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSideBar } from "@/components/sidebar.tsx/appsidebar";
+import { AppSideBar } from "@/components/sidebar/appsidebar";
 import { Toaster } from "sonner";
 
 const geistSans = localFont({

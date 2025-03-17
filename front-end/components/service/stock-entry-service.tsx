@@ -15,7 +15,7 @@ export const importStock = async (stockEntry: any) => {
             body: JSON.stringify(stockEntry)
         });
 
-        if (response.status === 200) {
+        if (response.ok) {
             const data = await response.json();
             return data;
         }

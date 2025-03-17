@@ -4,7 +4,7 @@ export interface Profile{
     userId:string,
     name:string,
     age?:number,
-    birthday?:string,
+    birthDay?:string,
     email:string,
     phoneNumber:string,
     pictureUrl?:string,

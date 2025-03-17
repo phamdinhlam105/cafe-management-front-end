@@ -27,20 +27,17 @@ import { toast } from "sonner";
 
 export default function OrderDetailBody() {
     const [data, setData] = useState<OrderDetail[]>([]);
-    const [filterData, setFilterData] = useState<OrderDetail[]>([]);
     const [currentOrder, setCurrentOrder] = useState<Order>();
-    const [search, setSearch] = useState('');
     const [chosenPromotion, setChosenPromotion] = useState<Promotion | undefined>();
     const [promotions, setPromotions] = useState<Promotion[]>([]);
+    const [total,setTotal] = useState('');
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id");
     const route = useRouter();
-    const [currentTotal, setCurrentTotal] = useState<{
-        total: string,
-        quantity: number,
-        discount: string,
-        realPay: string
-    }>()
+    const [promotionApply, setPromotionApply] = useState({
+        discount: "0",
+        realPay: "0",
+    });
 
     const fetchOrder = async () => {
         if (orderId) {
@@ -48,7 +45,6 @@ export default function OrderDetailBody() {
             if (!result.error) {
                 setCurrentOrder(result);
                 setData(result.details);
-
             }
             else {
                 toast.error("Không thể lấy thông tin đơn hàng", { description: `Lỗi ${result.error}` });
@@ -72,34 +68,36 @@ export default function OrderDetailBody() {
     }, [orderId]);
 
     useEffect(() => {
-        setFilterData(data);
-        console.log(data)
-    }, [data]);
-
-
-    useEffect(() => {
-        if (data && chosenPromotion)
-            if (data.length > 0) {
-                const total = data.reduce((acc, od) => acc + Number(od.total), 0);
-                const quantity = data.reduce((acc, od) => acc + Number(od.quantity), 0);
-                const discount = chosenPromotion ? (total * chosenPromotion.discount / 100) : 0;
-                const realPay = total - discount;
-
-                setCurrentTotal({
-                    total: total.toLocaleString(),
-                    quantity: quantity,
+        if (data) {
+            // Tính tổng giá trị của tất cả các chi tiết đơn hàng (không có khuyến mãi)
+            const totalAmount = data.reduce((acc, od) => acc + Number(od.total), 0);
+    
+            // Cập nhật total vào useState riêng biệt
+            setTotal(totalAmount.toLocaleString()); 
+    
+            // Nếu có khuyến mãi, tính discount và realPay
+            if (chosenPromotion) {
+                const discount = (totalAmount * chosenPromotion.discount) / 100;
+                const realPay = totalAmount - discount;
+    
+                setPromotionApply({
                     discount: discount.toLocaleString(),
-                    realPay: realPay.toLocaleString()
+                    realPay: realPay.toLocaleString(),
                 });
             } else {
-                setCurrentTotal({
-                    total: "0",
-                    quantity: 0,
+                setPromotionApply({
                     discount: "0",
-                    realPay: "0"
+                    realPay: totalAmount.toLocaleString(), 
                 });
             }
-    }, [data, chosenPromotion]);
+        } else {
+            setPromotionApply({
+                discount: "0",
+                realPay: "0",
+            });
+            setTotal("0");
+        }
+    }, [data, chosenPromotion]); 
     const onDelete = (id: string) => {
 
     }
@@ -111,9 +109,9 @@ export default function OrderDetailBody() {
             setChosenPromotion(undefined)
     }
 
-    const onEdit = () => {
+    const onEdit = async() => {
         if (orderId)
-            fetchOrder;
+            await fetchOrder();
     }
     const columns = getOrderDetailColumns({ onDelete, onEdit, status: currentOrder?.status ?? 0 });
     const NewButton = ({ currentOrder, onEdit }: { currentOrder: Order, onEdit: () => void }) => {
@@ -134,7 +132,7 @@ export default function OrderDetailBody() {
         const result = await callWithAuth(() => finishOrderService(currentOrder.id || ""));
         if (!result.error) {
             toast.success("Đơn hàng đã hoàn thành!");
-            fetchOrder();
+            onEdit();
         } else {
             toast.error("Hoàn thành đơn hàng thất bại", { description: result.error });
         }
@@ -161,36 +159,36 @@ export default function OrderDetailBody() {
 
     return <div className="p-4 space-y-4">
         <div className="flex justify-between mb-10">
-           
-            <div>Bàn số <span>{currentOrder?.no || ""}</span></div>
+
+            <div className="text-xl uppercase border p-2 rounded-sm">Bàn số <span>{currentOrder?.no || ""}</span></div>
             {currentOrder && <OrderStatusButton status={currentOrder.status} finishOrder={finishOrder} />}
-            {currentOrder?.status==0 &&
-            <Select onValueChange={handleSelectPromotionsClick}>
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Chọn khuyến mãi" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        <SelectLabel>Khuyến mãi</SelectLabel>
-                        {promotions.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-                        <SelectItem value="none">Không khuyến mãi</SelectItem>
-                    </SelectGroup>
-                </SelectContent>
-            </Select>}
+            {currentOrder?.status == 0 &&
+                <Select onValueChange={handleSelectPromotionsClick}>
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Chọn khuyến mãi" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Khuyến mãi</SelectLabel>
+                            {promotions.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                            <SelectItem value="none">Không khuyến mãi</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>}
             {currentOrder && <NewButton currentOrder={currentOrder} onEdit={onEdit} />}
         </div>
 
         <div className="flex items-center space-x-6 text-xl justify-between">
             <h2>Tổng giá: <span className="text-gray-600">
-                {currentTotal?.total || "0"} đ
+                {total || "0"} đ
             </span></h2>
             {
                 chosenPromotion && <>
                     <h2>Khuyến mãi: <span className="text-gray-600">
-                        {currentTotal?.discount} đ
+                        {promotionApply?.discount} đ
                     </span></h2>
                     <h2>Phải thanh toán: <span className="text-gray-600">
-                        {currentTotal?.realPay} đ
+                        {promotionApply?.realPay} đ
                     </span></h2>
                 </>
             }

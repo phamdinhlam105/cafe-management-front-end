@@ -25,22 +25,23 @@ import { SidebarModel } from "./sidebar-model";
 
 export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const path = usePathname();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [role,setRole] = useState<SidebarModel[]>();
+    const [role, setRole] = useState<SidebarModel[]>();
+    const [user, setUser] = useState<{ role: string, name: string } | null>();
+
     useEffect(() => {
-        const user = checkRole();
-        setIsLoggedIn(!!user);
-        if(user?.role==="nhân viên")
+        const userData = checkRole();
+        setUser(userData);
+    
+        if (userData?.role === "Nhân viên") {
             setRole(EmployeeSidebar);
-        else
+        } else {
             setRole(SidebarStructure);
+        }
     }, [path]);
-
-    if (!isLoggedIn) {
+    if(!user)
         return null;
-    }
 
-    return <Sidebar {...props}  className="z-30 shadow-md"
+    return <Sidebar {...props} className="z-30 shadow-md"
     >
         <SidebarHeader className="py-5">
             <Link href={'/'} className="flex items-center">

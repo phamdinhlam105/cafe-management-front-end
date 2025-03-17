@@ -93,10 +93,10 @@ export const addSchedule = async (promotionSchedule: any) => {
     }
 }
 
-export const editPromotion = async (edittedPromotion: any) => {
+export const editPromotion = async (id:string, edittedPromotion: any) => {
     const token = getAccessToken("accessToken");
     try {
-        const response = await fetch(`${API_URL}/promotion`, {
+        const response = await fetch(`${API_URL}/promotion/${id}`, {
             method: "PUT",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -105,9 +105,8 @@ export const editPromotion = async (edittedPromotion: any) => {
             body: JSON.stringify(edittedPromotion)
         });
 
-        if (response.status === 200) {
-            const data = await response.json();
-            return data;
+        if (response.ok) {
+            return {message:"success"};
         }
         else
             return { error: "Dữ liệu không hợp lệ" }

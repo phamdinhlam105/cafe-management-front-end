@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PROFILE } from "./profile-contants";
 import { DialogHeader } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Profile } from "./profile-model";
 import { DatePicker } from "@/components/date-picker";
 import { getYear } from "date-fns";
-import { stringToDate } from "@/components/helper/string-to-date";
+import { stringToDateYearFirst } from "@/components/helper/string-to-date";
 import { callWithAuth } from "@/components/service/token-handler";
 import { editProfile } from "@/components/service/profile-service";
 
@@ -18,26 +17,27 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
     const [name, setName] = useState(profile.name);
     const [email, setEmail] = useState(profile.email);
     const [phone, setPhone] = useState(profile.phoneNumber);
-    const [birthDate, setBirthDate] = useState<Date>(stringToDate(profile.birthday));
+    const [birthDate, setBirthDate] = useState<Date>(stringToDateYearFirst(profile.birthDay));
     const [picture, setPicture] = useState(profile.pictureUrl);
     const [isOpen, setIsOpen] = useState(false);
 
-    const [day, setDay] = useState("");
-    const [month, setMonth] = useState("");
-    const [year, setYear] = useState("");
+    const [day, setDay] = useState(birthDate.getDate());
+    const [month, setMonth] = useState(birthDate.getMonth());
+    const [year, setYear] = useState(birthDate.getUTCFullYear());
 
     const handleSave = async () => {
         let birthDate: Date | null = null;
         let age: number | null = null;
-
         if (day && month && year) {
-            const d = parseInt(day, 10);
-            const m = parseInt(month, 10);
-            const y = parseInt(year, 10);
+            const d = parseInt(day.toString(), 10);
+            const m = parseInt(month.toString(), 10);
+            const y = parseInt(year.toString(), 10);
 
             if (d >= 1 && d <= 31 && m >= 1 && m <= 12 && y < getYear(new Date())) {
                 birthDate = new Date(y, m - 1, d);
                 age = getYear(new Date()) - y;
+                console.log(age)
+                console.log(getYear(new Date()))
             } else {
                 toast.error("Ngày tháng năm không hợp lệ", {
                     description: "Vui lòng nhập đúng ngày sinh."
@@ -50,7 +50,7 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
             toast.warning("Tên và email không được bỏ trống")
         if (!email.trim() || !name.trim())
             toast.warning("Tên và email không được bỏ trống")
-        
+
         const newProfile = {
             id: profile.id,
             userId: profile.userId,
@@ -58,7 +58,7 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
             email: email,
             phoneNumber: phone,
             joinDate: profile.joinDate,
-            birthDate: birthDate,
+            birthDay: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
             age: age,
             pictureUrl: picture
         };
@@ -116,7 +116,7 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
                                 placeholder="Ngày"
                                 value={day}
                                 min="1" max="31"
-                                onChange={(e) => setDay(e.target.value)}
+                                onChange={(e) => setDay(Number(e.target.value))}
                                 className="w-1/3"
                             />
                             <Input
@@ -124,7 +124,7 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
                                 placeholder="Tháng"
                                 value={month}
                                 min="1" max="12"
-                                onChange={(e) => setMonth(e.target.value)}
+                                onChange={(e) => setMonth(Number(e.target.value))}
                                 className="w-1/3"
                             />
                             <Input
@@ -132,7 +132,7 @@ export default function ProfileEdit({ onProfileEdit, profile }: { profile: Profi
                                 placeholder="Năm"
                                 value={year}
                                 min="1900" max={getYear(new Date()).toString()}
-                                onChange={(e) => setYear(e.target.value)}
+                                onChange={(e) => setYear(Number(e.target.value))}
                                 className="w-1/3"
                             />
                         </div>
