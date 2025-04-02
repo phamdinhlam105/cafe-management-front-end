@@ -1,8 +1,8 @@
 "use client"
 
-import { getCustomerColumns } from "@/components/customer/customer-columns";
-import { Customer } from "@/components/customer/customer-model";
-import NewCustomer from "@/components/customer/new-customer";
+import { getCustomerColumns } from "@/components/column-def/order/customer-columns";
+import { Customer } from "@/components/model/order/customer-model";
+import NewCustomer from "@/components/order-components/customer/new-customer";
 import { getAllCustomer } from "@/components/service/customer-service";
 import { callWithAuth } from "@/components/service/token-handler";
 import { DataTable } from "@/components/table/data-table";
@@ -31,8 +31,6 @@ export default function CustomerBody() {
 
     return <div className="p-4 space-y-4">
         <NewCustomer onChange={onChange} />
-        {data ? <DataTable columns={columns} data={data} onDelete={function (idRow: string): void {
-            throw new Error("Function not implemented.");
-        }} /> : "Đang tải dữ liệu"}
+        {data ? <DataTable columns={columns} data={data} /> : "Đang tải dữ liệu"}
     </div>
 }

@@ -1,4 +1,4 @@
-import Header from "@/components/header/header";
+import Header from "@/components/layout-components/header/header";
 import CategoryBody from "./body";
 
 export default function CategoryPage() {

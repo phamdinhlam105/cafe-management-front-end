@@ -2,9 +2,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./register";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 

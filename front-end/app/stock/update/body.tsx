@@ -1,14 +1,13 @@
 "use client"
 
-import { formatDate } from "@/components/helper/date-to-string";
 import { getTodayStock, updateStock } from "@/components/service/stock-service";
 import { callWithAuth } from "@/components/service/token-handler";
-import { getStockUpdateColumns } from "@/components/stock/stock-update-columns";
-import { StockDetail } from "@/components/stockDetail/stockDetail-model";
+import { StockDetail } from "@/components/model/stock/stockDetail-model";
 import { DataTable } from "@/components/table/data-table";
 import { Button } from "@/components/ui/button";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { getStockUpdateColumns } from "@/components/column-def/stock/stock-update-columns";
 
 export default function StockUpdateBody() {
 
@@ -87,9 +86,6 @@ export default function StockUpdateBody() {
             <DataTable
                 columns={columns}
                 data={updateStockData}
-                onDelete={function (idRow: string): void {
-                    throw new Error("Function not implemented.");
-                }}
             />
         )}
 

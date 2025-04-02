@@ -4,17 +4,17 @@ import { getAllRoles, getAllUsers, setRoleRequest } from "@/components/service/a
 import { callWithAuth } from "@/components/service/token-handler";
 import { DataTable } from "@/components/table/data-table";
 import { Button } from "@/components/ui/button";
-import { getUserCollumns } from "@/components/user/user-columns";
-import { User } from "@/components/user/user-model"
+import { User } from "@/components/model/user/user-model"
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { getUserCollumns } from "@/components/column-def/user-columns";
 
 export default function SetRoleBody() {
 
     const [data, setData] = useState<User[]>([]);
     const [updateList, setUpdateList] = useState<{ idUser: string, idRole: string }[]>([]);
     const [allRoles, setAllRoles] = useState<{ id: string, roleName: string }[]>([]);
-    const [columns, setColumns] = useState<any[]>([]); 
+    const [columns, setColumns] = useState<any[]>([]);
     const fetchAllRole = async () => {
         const result = await callWithAuth(getAllRoles);
         if (!result.error)
@@ -53,20 +53,20 @@ export default function SetRoleBody() {
     const roleChange = (idUser: string, idRole: string) => {
         setUpdateList((prevList) => {
             // Tìm user trong data theo idUser
-            const user = data.find((item) => item.id === idUser); 
+            const user = data.find((item) => item.id === idUser);
             if (!user) return prevList; // Nếu không tìm thấy user thì không làm gì
-    
+
             const index = prevList.findIndex((item) => item.idUser === idUser);
-    
+
             if (index !== -1) {
                 if (user.role === idRole) {
                     const updatedList = [...prevList];
-                    updatedList.splice(index, 1); 
+                    updatedList.splice(index, 1);
                     return updatedList;
                 } else {
-                   
+
                     const updatedList = [...prevList];
-                    updatedList[index].idRole = idRole; 
+                    updatedList[index].idRole = idRole;
                     return updatedList;
                 }
             } else {
@@ -86,8 +86,6 @@ export default function SetRoleBody() {
 
     return <div className="p-4 space-y-4">
         <Button onClick={updateRole}>Lưu thay đổi</Button>
-        {columns?<DataTable columns={columns} data={data} onDelete={function (idRow: string): void {
-            throw new Error("Function not implemented.");
-        }} />:"Đang tải dữ liệu"}
+        {columns ? <DataTable columns={columns} data={data} /> : "Đang tải dữ liệu"}
     </div>
 }

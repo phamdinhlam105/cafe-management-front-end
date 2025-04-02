@@ -1,8 +1,8 @@
 "use client"
 import { DatePicker } from "@/components/date-picker";
 import { formatDate } from "@/components/helper/date-to-string";
+import { DailyReport } from "@/components/model/report/daily-report-model";
 import BestDay from "@/components/report/best-day";
-import { DailyReport } from "@/components/report/daily/daily-report-model";
 import ReportChart from "@/components/report/report-chart";
 import { getDailyReportByRange, updateReportService } from "@/components/service/report-service";
 import { callWithAuth } from "@/components/service/token-handler";

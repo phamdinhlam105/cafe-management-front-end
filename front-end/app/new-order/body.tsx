@@ -1,5 +1,5 @@
 "use client"
-import { OrderStatus } from "@/components/order/enums";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,22 +8,18 @@ import { SelectValue } from "@radix-ui/react-select";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { callWithAuth } from "@/components/service/token-handler";
 import { createOrder } from "@/components/service/order-service";
-import { addCustomerService, getAllCustomer } from "@/components/service/customer-service";
-import { Customer } from "@/components/customer/customer-model";
+import { getAllCustomer } from "@/components/service/customer-service";
+import { Customer } from "@/components/model/order/customer-model";
+import NewCustomer from "@/components/order-components/customer/new-customer";
 
 
 export default function NewOrderBody() {
     const route = useRouter();
     const [customerId, setCustomerId] = useState('');
     const [note, setNote] = useState('');
-    const [newCustomerName, setNewCustomerName] = useState('');
-    const [newCustomerPhone, setNewCustomerPhone] = useState('');
-    const [isOpen, setIsOpen] = useState(false);
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [address, setAddress] = useState('');
     const [tableNo, setTableNo] = useState<number>();
 
     const handleCustomerChange = (value: string) => {
@@ -51,38 +47,6 @@ export default function NewOrderBody() {
             toast.error("Không thể lấy thông tin khách hàng", { description: `Lỗi: ${result.erorr}` })
     }
 
-    const fetchCreateCustomer = async (newCustomer: any) => {
-        const result = await callWithAuth(() => addCustomerService(newCustomer));
-        if (!result.error)
-            return result;
-        return null;
-    }
-
-    const handleAddCustomer = async (event: React.FormEvent) => {
-        event.preventDefault();
-
-        if (!newCustomerName) {
-            toast.warning('Hãy nhập tên khách hàng');
-            return;
-        }
-
-        const newCustomer = {
-            name: newCustomerName,
-            phone: newCustomerPhone || null,
-            address: address || null,
-            no: tableNo
-        };
-        const result = await fetchCreateCustomer(newCustomer);
-        if (result) {
-            toast.success("Thêm khách hàng thành công", {
-                description: `Khách hàng ${newCustomer.name} đã được thêm.`,
-            });
-            await fetchCustomers();
-        }
-
-        else
-            toast.error("Đã xảy ra lỗi khi thêm khách hàng");
-    };
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -108,8 +72,8 @@ export default function NewOrderBody() {
             setCustomerId(customers[0].id);
     }, [customers])
 
-    const newCustomerClick = async () => {
-        setIsOpen(true);
+    const customerOnChange = () => {
+         fetchCustomers();
     }
 
     return (
@@ -134,7 +98,7 @@ export default function NewOrderBody() {
                             )) : "Đang load dữ liệu"}
                         </SelectContent>
                     </Select>
-                    <Button className="mt-2" onClick={e => { e.preventDefault(); newCustomerClick() }}>Thêm khách hàng mới</Button>
+                    <NewCustomer onChange={customerOnChange}/>
                 </div>
 
                 <div>
@@ -169,52 +133,7 @@ export default function NewOrderBody() {
                     </Button>
                 </div>
             </form>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
 
-                <DialogContent>
-                    <form id="customer-form" onSubmit={handleAddCustomer} >
-                        <DialogHeader>
-                            <DialogTitle>Thêm Khách Hàng Mới</DialogTitle>
-                        </DialogHeader>
-
-                        <Label htmlFor="newCustomerName" className="block text-sm font-medium text-gray-700">
-                            Tên khách hàng
-                        </Label>
-                        <Input
-                            id="newCustomerName"
-                            value={newCustomerName}
-                            onChange={(e) => setNewCustomerName(e.target.value)}
-                            className="mt-1"
-                            placeholder="Nhập tên khách hàng"
-                            required
-                        />
-                        <Label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                            Số điện thoại
-                        </Label>
-                        <Input
-                            id="phone"
-                            value={newCustomerPhone}
-                            onChange={(e) => setNewCustomerPhone(e.target.value)}
-                            className="mt-1"
-                            placeholder="Nhập số điện thoại"
-                            type="number"
-                        />
-                        <Label htmlFor="adrress" className="block text-sm font-medium text-gray-700">
-                            Địa chỉ
-                        </Label>
-                        <Input
-                            id="adrress"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            className="mt-1"
-                            placeholder="Nhập Địa chỉ khách hàng"
-                        />
-                        <Button type="submit" className="mt-4">
-                            Thêm khách hàng
-                        </Button>
-                    </form>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }

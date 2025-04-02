@@ -6,8 +6,8 @@ import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, Dialog
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { callWithAuth } from "../service/token-handler"
-import { createPromotion, editPromotion } from "../service/promotion-service"
-import { Promotion } from "./promotion-model"
+import { editPromotion } from "../service/promotion-service"
+import { Promotion } from "@/components/model/promotion/promotion-model"
 export default function EditPromotion({ currentPromotion,onEdit }: { currentPromotion: Promotion,onEdit: ()=>void }) {
 
     const [name, setName] = useState(currentPromotion.name)

@@ -1,11 +1,12 @@
 "use client"
-import { getCategoryColumns } from "@/components/category/column-def";
+
 import { DataTable } from "@/components/table/data-table";
 import { SetStateAction, useEffect, useState } from "react";
 import SearchButton from "@/components/item-list/search-button";
 import { callWithAuth } from "@/components/service/token-handler";
 import { getAllCategory } from "@/components/service/category-service";
-import NewCategory from "@/components/category/new-category";
+import NewCategory from "@/components/order-components/category/new-category";
+import { getCategoryColumns } from "@/components/column-def/order/category-columns";
 
 export default function CategoryBody() {
     const [data, setData] = useState<Category[]>([]);
@@ -34,9 +35,6 @@ export default function CategoryBody() {
         else
         setFilterData(data);
     }
-    const onDelete = (id: string) => {
-        setData((prev) => prev.map((item) => item.id === id ? { ...item, status: 'deleted' } : item));
-    }
 
     const onEdit = (updatedCategory: Category) => {
         setData(prev => {
@@ -55,6 +53,6 @@ export default function CategoryBody() {
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
             <NewCategory onEdit={onEdit} />
         </div>
-        <DataTable columns={columns} data={data} onDelete={onDelete} />
+        <DataTable columns={columns} data={data}  />
     </div>
 }

@@ -7,18 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 
 export default function NewProductBody() {
-    const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [idCategory, setIdCategory] = useState("");
-    const [img, setImg] = useState('');
+
+    const [newProduct, setNewProduct] = useState({ name: "", price: 0, idCategory: "", img: "" })
     const [categories, setCategories] = useState<Category[]>([]);
-
-
 
     const fetchCategories = async () => {
         const result = await callWithAuth(getAllCategory);
@@ -29,38 +25,47 @@ export default function NewProductBody() {
     useEffect(() => {
         fetchCategories();
     }, []);
+
     const handleCategoryChange = (value: string) => {
-        setIdCategory(value);
+        setNewProduct(prev => ({
+            ...prev,
+            idCategory: value
+        }));
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (!name || !price || !idCategory) {
+        if (!newProduct.name || !newProduct.price || !newProduct.idCategory) {
             alert('Hãy điền đầy đủ thông tin sản phẩm');
             return;
         }
 
-        const newProductData = {
-            name: name,
-            price: price,
-            img: img ? img : null,
-            categoryId: idCategory
-        };
-        const result = await callWithAuth(() => addProduct(newProductData));
+
+        const result = await callWithAuth(() => addProduct(newProduct));
         if (!result.error) {
             toast("Thêm sản phẩm thành công", {
                 description: `Sản phẩm ${name} đã được thêm thành công`
             });
-            setName("");
-            setPrice("");
-            setIdCategory("");
+            setNewProduct({
+                name: "",
+                price: 0,
+                idCategory: "",
+                img: ""
+            })
         }
         else
             toast("Thêm sản phẩm thất bại", {
                 description: `Không thể thêm sản phẩm. Vui lòng thử lại sau`
             });
     };
+
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewProduct(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }))
+    }
 
     return (
         <div className="p-4">
@@ -72,9 +77,10 @@ export default function NewProductBody() {
                         Tên sản phẩm
                     </Label>
                     <Input
+                        name="name"
                         id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={newProduct.name}
+                        onChange={handleInputChange}
                         className="mt-1"
                         placeholder="Nhập tên sản phẩm"
                     />
@@ -86,8 +92,9 @@ export default function NewProductBody() {
                     </Label>
                     <Input
                         id="price"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
+                        name="price"
+                        value={newProduct.price}
+                        onChange={handleInputChange}
                         className="mt-1"
                         placeholder="Nhập giá sản phẩm"
                     />
@@ -100,8 +107,9 @@ export default function NewProductBody() {
                         </Label>
                         <Input
                             id="imgUrl"
-                            value={img}
-                            onChange={(e) => setImg(e.target.value)}
+                            name="img"
+                            value={newProduct.img}
+                            onChange={handleInputChange}
                             className="mt-1"
                             placeholder="Nhập URL ảnh sản phẩm"
                         />
@@ -110,19 +118,20 @@ export default function NewProductBody() {
                         <Label htmlFor="idCategory" className="block text-sm font-medium text-gray-700">
                             Danh mục sản phẩm
                         </Label>
-                        <Select value={idCategory} onValueChange={handleCategoryChange}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Chọn danh mục" />
-                            </SelectTrigger>
-                            <SelectContent>
+                        {categories.length > 0 ?
+                            <Select value={newProduct.idCategory} onValueChange={handleCategoryChange}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Chọn danh mục" />
+                                </SelectTrigger>
+                                <SelectContent>
 
-                                {categories.map((category) => (
-                                    <SelectItem key={category.id} value={category.id}>
-                                        {category.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                                    {categories.map((category) => (
+                                        <SelectItem key={category.id} value={category.id}>
+                                            {category.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select> : "Đang load dữ liệu"}
                     </div>
 
                 </div>

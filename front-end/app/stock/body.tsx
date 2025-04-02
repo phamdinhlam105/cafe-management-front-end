@@ -1,11 +1,11 @@
 "use client"
-import { StockDetail } from "@/components/stockDetail/stockDetail-model";
+import { StockDetail } from "@/components/model/stock/stockDetail-model";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Stock } from "@/components/stock/stock-model";
+import { Stock } from "@/components/model/stock/stock-model";
 import { DataTable } from "@/components/table/data-table";
-import { getStockDetailColumns } from "@/components/stockDetail/stockDetail-conlumn";
+import { getStockDetailColumns } from "@/components/column-def/stock/stockDetail-conlumn";
 import SearchButton from "@/components/item-list/search-button";
 import { callWithAuth } from "@/components/service/token-handler";
 import { getDetailByDate, getTodayStock } from "@/components/service/stock-service";
@@ -39,10 +39,9 @@ export default function StockBody() {
         else
             setFilterData(data);
     }
-    const onDelete = (idRow: string) => {
-
-    }
+    
     var columns = getStockDetailColumns();
+
     return <div className="p-4 space-y-5">
         <div className="h-10 flex space-x-4 items-center">
             <SearchButton search={search} setSearch={setSearch} handleSearchClick={handleSearchClick} />
@@ -54,6 +53,6 @@ export default function StockBody() {
                 Ngày: <span className="font-normal text-gray-500">{stock?.createDate}</span>
             </div>
         </div>
-        <DataTable columns={columns} data={filterData} onDelete={onDelete} />
+        <DataTable columns={columns} data={filterData} />
     </div>
 }

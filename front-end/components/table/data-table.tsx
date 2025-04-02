@@ -24,18 +24,15 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Pagination from "@/components/table/pagination"
-import ActionsNavigation from "./actions-navigation"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  onDelete: (idRow: string) => void
 }
 
 export function DataTable<TData extends { id: string }, TValue>({
   columns,
-  data,
-  onDelete
+  data
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({

@@ -1,20 +1,21 @@
 "use client"
+
 import { DateTimePicker24h } from "@/components/datetime-picker";
-import { formatDate, formatDateTime } from "@/components/helper/date-to-string";
-import { Ingredient } from "@/components/ingredient/ingredient-model";
+import { formatDateTime } from "@/components/helper/date-to-string";
 import { getAllIngredient } from "@/components/service/ingredient-service";
 import { importStock } from "@/components/service/stock-entry-service";
 import { getTodayStock } from "@/components/service/stock-service";
 import { callWithAuth } from "@/components/service/token-handler";
-import { StockDetail } from "@/components/stockDetail/stockDetail-model";
-import { getStockEntryColumn } from "@/components/stockEntry/stockEntry-column";
-import { StockEntryDetail } from "@/components/stockEntryDetail/stockEntryDetail-model";
+import { StockDetail } from "@/components/model/stock/stockDetail-model";
+import { StockEntryDetail } from "@/components/model/stock/stockEntryDetail-model";
 import { DataTable } from "@/components/table/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Ingredient } from "@/components/model/stock/ingredient-model";
+import { getStockEntryColumn } from "@/components/column-def/stock/stockEntry-column";
 
 export default function ImportStockBody() {
 
@@ -120,9 +121,6 @@ export default function ImportStockBody() {
             <DataTable
                 columns={columns}
                 data={data}
-                onDelete={function (idRow: string): void {
-                    throw new Error("Function not implemented.");
-                }}
             />
         )}
 

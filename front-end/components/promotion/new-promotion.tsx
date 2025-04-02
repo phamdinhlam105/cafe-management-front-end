@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { callWithAuth } from "../service/token-handler"
 import { createPromotion } from "../service/promotion-service"
-import { Promotion } from "./promotion-model"
+import { Promotion } from "@/components/model/promotion/promotion-model"
 
 export default function NewPromotion({ onNewPromotion }: {
     onNewPromotion: (newPromo: Promotion) => void

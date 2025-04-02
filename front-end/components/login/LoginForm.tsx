@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,18 +10,17 @@ import { useRouter } from "next/navigation";
 import jwt from "jsonwebtoken";
 
 export default function LoginForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    const data = await loginRequest(username, password);
+    const data = await loginRequest(user.username, user.password);
 
     setLoading(false);
     if (data.error) {
@@ -41,28 +40,37 @@ export default function LoginForm() {
     router.push('/order');
   };
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUser(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
       <div className="space-y-1">
         <Label htmlFor="username">Tên đăng nhập</Label>
         <Input
+          name="username"
           id="username"
           type="text"
           placeholder="Nhập tên đăng nhập"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={user.username}
+          onChange={handleInputChange}
           className="w-full"
         />
       </div>
       <div className="space-y-1">
         <Label htmlFor="password">Mật khẩu</Label>
         <Input
+          name="password"
           id="password"
           type="password"
           placeholder="Nhập mật khẩu"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={user.password}
+          onChange={handleInputChange}
           className="w-full"
         />
       </div>

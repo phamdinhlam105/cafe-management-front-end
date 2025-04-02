@@ -24,6 +24,7 @@ export const getAllOrder = async () => {
 };
 
 export const createOrder = async (note?: string, customerId?: string) => {
+
     const token = getAccessToken("accessToken");
     try {
         const response = await fetch(API_ORDER, {
@@ -109,18 +110,6 @@ export const finishOrderService = async (id: string) => {
         });
 
         if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `HoaDon_${id}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-
             return { success: true };
         }
 
@@ -131,3 +120,4 @@ export const finishOrderService = async (id: string) => {
         return { error: "Không thể kết nối đến server!" };
     }
 };
+

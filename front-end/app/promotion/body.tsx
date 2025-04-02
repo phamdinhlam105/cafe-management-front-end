@@ -2,9 +2,7 @@
 import EditPromotion from "@/components/promotion/edit-promotion";
 import NewPromotion from "@/components/promotion/new-promotion";
 import NewPromotionSchedule from "@/components/promotion/new-schedule";
-import { Promotion } from "@/components/promotion/promotion-model"
-import { getPromotionScheduleColumns } from "@/components/promotion/schedule-columns";
-import { PromotionSchedule } from "@/components/promotion/schedule-model";
+import { PromotionSchedule } from "@/components/model/promotion/schedule-model";
 import { getAllPromotion, getScheduleByPromotionId } from "@/components/service/promotion-service";
 import { callWithAuth } from "@/components/service/token-handler";
 import { DataTable } from "@/components/table/data-table";
@@ -14,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 
 import { useEffect, useState } from "react"
+import { Promotion } from "@/components/model/promotion/promotion-model";
+import { getPromotionScheduleColumns } from "@/components/column-def/promotion/schedule-columns";
 
 export default function PromotionBody() {
 
@@ -41,6 +41,7 @@ export default function PromotionBody() {
                 setSchedule(result);
         }
     }
+    
     const handleNewPromotion = async (newPromo: Promotion) => {
         await fetchPromotions(newPromo.id);
     };
@@ -57,9 +58,9 @@ export default function PromotionBody() {
     const onEdit = async() =>{
         await fetchPromotions();
     }
-    const onDelete = (idRow: string) => {
-    }
+
     const columns = getPromotionScheduleColumns();
+
     return <div className="p-4 space-y-5">
         <div className="flex justify-between items-center w-full">
             <div className="flex space-x-4 items-center">
@@ -91,6 +92,6 @@ export default function PromotionBody() {
 
         {chosenPromotion ? <NewPromotionSchedule chosenPromotion={chosenPromotion} setIschanged={setIschanged} /> : ''}
         <h2 className="mt-10 text-xl font-bold text-center">Lịch trình áp dụng khuyến mãi</h2>
-        <DataTable columns={columns} data={schedule} onDelete={onDelete} />
+        <DataTable columns={columns} data={schedule}/>
     </div>
 }

@@ -1,12 +1,8 @@
 "use client"
-import SearchButton from "@/components/item-list/search-button";
-import { OrderStatus } from "@/components/order/enums";
-import { Order } from "@/components/order/order-model";
-import { getOrderDetailColumns } from "@/components/orderDetail/column-def";
-import OrderStatusButton from "@/components/orderDetail/order-status-button";
-import { OrderDetail } from "@/components/orderDetail/orderDetail-model";
-import NewOrderDetailDialog from "@/components/orderDetail/orderDetail-new-dialog";
-import { Promotion } from "@/components/promotion/promotion-model";
+import { OrderStatus } from "@/components/helper/enums";
+import OrderStatusButton from "@/components/order-components/orderDetail/order-status-button";
+import { OrderDetail } from "@/components/model/order/orderDetail-model";
+import NewOrderDetailDialog from "@/components/order-components/orderDetail/orderDetail-new-dialog";
 import { cancelOrderService, finishOrderService, getOrderById } from "@/components/service/order-service";
 import { getAllPromotion } from "@/components/service/promotion-service";
 import { callWithAuth } from "@/components/service/token-handler";
@@ -24,13 +20,17 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Order } from "@/components/model/order/order-model";
+import { Promotion } from "@/components/model/promotion/promotion-model";
+import { getOrderDetailColumns } from "@/components/column-def/order/orderDetail-columns";
+import { generatePdf } from "@/components/helper/billing/exportPdf";
 
 export default function OrderDetailBody() {
     const [data, setData] = useState<OrderDetail[]>([]);
     const [currentOrder, setCurrentOrder] = useState<Order>();
     const [chosenPromotion, setChosenPromotion] = useState<Promotion | undefined>();
     const [promotions, setPromotions] = useState<Promotion[]>([]);
-    const [total,setTotal] = useState('');
+    const [total, setTotal] = useState('');
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id");
     const route = useRouter();
@@ -71,15 +71,15 @@ export default function OrderDetailBody() {
         if (data) {
             // Tính tổng giá trị của tất cả các chi tiết đơn hàng (không có khuyến mãi)
             const totalAmount = data.reduce((acc, od) => acc + Number(od.total), 0);
-    
+
             // Cập nhật total vào useState riêng biệt
-            setTotal(totalAmount.toLocaleString()); 
-    
+            setTotal(totalAmount.toLocaleString());
+
             // Nếu có khuyến mãi, tính discount và realPay
             if (chosenPromotion) {
                 const discount = (totalAmount * chosenPromotion.discount) / 100;
                 const realPay = totalAmount - discount;
-    
+
                 setPromotionApply({
                     discount: discount.toLocaleString(),
                     realPay: realPay.toLocaleString(),
@@ -87,7 +87,7 @@ export default function OrderDetailBody() {
             } else {
                 setPromotionApply({
                     discount: "0",
-                    realPay: totalAmount.toLocaleString(), 
+                    realPay: totalAmount.toLocaleString(),
                 });
             }
         } else {
@@ -97,7 +97,7 @@ export default function OrderDetailBody() {
             });
             setTotal("0");
         }
-    }, [data, chosenPromotion]); 
+    }, [data, chosenPromotion]);
     const onDelete = (id: string) => {
 
     }
@@ -109,7 +109,7 @@ export default function OrderDetailBody() {
             setChosenPromotion(undefined)
     }
 
-    const onEdit = async() => {
+    const onEdit = async () => {
         if (orderId)
             await fetchOrder();
     }
@@ -129,13 +129,15 @@ export default function OrderDetailBody() {
 
         const isConfirmed = window.confirm("Bạn có chắc chắn thanh toán đơn hàng này không?");
         if (!isConfirmed) return;
-        const result = await callWithAuth(() => finishOrderService(currentOrder.id || ""));
+        {/*const result = await callWithAuth(() => finishOrderService(currentOrder.id || ""));
         if (!result.error) {
+            await callWithAuth(() => generatePdf(currentOrder));
             toast.success("Đơn hàng đã hoàn thành!");
             onEdit();
         } else {
             toast.error("Hoàn thành đơn hàng thất bại", { description: result.error });
-        }
+        }*/}
+        await generatePdf(currentOrder);
     }
 
     const cancelOrder = async () => {
@@ -160,7 +162,7 @@ export default function OrderDetailBody() {
     return <div className="p-4 space-y-4">
         <div className="flex justify-between mb-10">
 
-            <div className="text-xl uppercase border p-2 rounded-sm">Bàn số <span>{currentOrder?.no || ""}</span></div>
+            <div className="text-xl uppercase border p-2 rounded-sm">Bàn số <span>{currentOrder?.no}</span></div>
             {currentOrder && <OrderStatusButton status={currentOrder.status} finishOrder={finishOrder} />}
             {currentOrder?.status == 0 &&
                 <Select onValueChange={handleSelectPromotionsClick}>
@@ -199,6 +201,6 @@ export default function OrderDetailBody() {
         </div>
 
 
-        {data ? <DataTable columns={columns} data={data} onDelete={onDelete} /> : "Đang tải dữ liệu"}
+        {data ? <DataTable columns={columns} data={data} /> : "Đang tải dữ liệu"}
     </div>
 }

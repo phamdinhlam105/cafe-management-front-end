@@ -3,12 +3,12 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import DefaultAvatar from "@/components/profile/default-avatar";
 import { Separator } from "@/components/ui/separator";
-import ProfileEdit from "./edit";
 import { useEffect, useState } from "react";
-import { Profile } from "./profile-model";
+import { Profile } from "../../components/model/user/profile-model";
 import { callWithAuth } from "@/components/service/token-handler";
 import { editProfile, getProfile } from "@/components/service/profile-service";
-import ChangePassword from "./change-password";
+import ChangePassword from "../../components/profile/change-password";
+import ProfileEdit from "@/components/profile/edit";
 
 export default function ProfileBody() {
 
@@ -20,9 +20,9 @@ export default function ProfileBody() {
             setProfile(result);
     }
 
-    const fetchProfileEdit = async (newProfile:any)=>{
+    const fetchProfileEdit = async (newProfile: any) => {
         const result = await callWithAuth(await editProfile(newProfile));
-        if(!result.error)
+        if (!result.error)
             setProfile(result);
     }
 
@@ -31,7 +31,7 @@ export default function ProfileBody() {
     }, []);
 
 
-    const onProfileEdit = (newProfile:Profile)=>{
+    const onProfileEdit = (newProfile: Profile) => {
         fetchProfileEdit(newProfile);
     }
 
@@ -55,7 +55,6 @@ export default function ProfileBody() {
                                             src={profile.pictureUrl}
                                             alt="avatar"
                                             className="object-cover h-32 rounded-full border border-4 border-white">
-
                                         </AvatarImage>
                                     </Avatar> :
                                     <DefaultAvatar name={profile.name} size={32} />}
@@ -64,13 +63,11 @@ export default function ProfileBody() {
                             <p className="text-gray-50 text-md ml-40">{profile.email}</p>
                         </div>
                         <div className="flex space-x-2">
-                            <ChangePassword/>
+                            <ChangePassword />
                             <ProfileEdit profile={profile} onProfileEdit={onProfileEdit} />
                         </div>
                     </div>
                     <div className="flex justify-between">
-
-
                         <div className="border rounded-md w-7/12 shadow-md bg-background mt-10">
                             <h3 className="font-bold my-2 mx-4">Thông tin của tôi</h3>
                             <Separator />
@@ -94,7 +91,6 @@ export default function ProfileBody() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div> :
                 "Đang load dữ liệu"}
